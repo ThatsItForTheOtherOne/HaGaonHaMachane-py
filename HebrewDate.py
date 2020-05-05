@@ -31,7 +31,7 @@ class HebrewDate(commands.Cog):
         await createEmbed(ctx, await self.currentHebrewDate())
 
     @commands.command(name="eventsToday")
-    async def hebrewDate(self, ctx):
+    async def eventsToday(self, ctx):
         await createEmbed(ctx, await self.currentParshaAndHoliday())
     
     @tasks.loop(hours=1)
