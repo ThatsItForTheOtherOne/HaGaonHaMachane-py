@@ -36,7 +36,7 @@ class HebrewDate(commands.Cog):
     
     @commands.command(name="dailyOverview")
     async def dailyOverview(self, ctx):
-        overviewStr = 'Today\'s date is' + await self.currentHebrewDate() + ' the daily parsha and holidays today are: ' + await self.currentParshaAndHoliday()
+        overviewStr = 'Today\'s date is ' + await self.currentHebrewDate() + ' the daily parsha and holidays today are: ' + await self.currentParshaAndHoliday()
         await createEmbed(ctx, overviewStr)
 
     @tasks.loop(hours=1)
