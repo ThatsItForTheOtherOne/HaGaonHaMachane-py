@@ -34,6 +34,11 @@ class HebrewDate(commands.Cog):
     async def eventsToday(self, ctx):
         await createEmbed(ctx, await self.currentParshaAndHoliday())
     
+    @commands.command(name="dailyOverview")
+    async def dailyOverview(self, ctx):
+        overviewStr = 'Today\'s date is' + await self.currentHebrewDate() + ' the daily parsha and holidays today are: ' + await self.currentParshaAndHoliday()
+        await createEmbed(ctx, overviewStr)
+
     @tasks.loop(hours=1)
     async def changeStatus(self):
         game = discord.Game(self.bot.command_prefix + 'help | HaGaon 1.0! | The date is ' + await self.currentHebrewDate() + ' | Today\'s events: ' + await self.currentParshaAndHoliday())
