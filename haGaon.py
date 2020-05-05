@@ -17,7 +17,7 @@ async def on_ready():
         for cog in cog_list:
                 bot.load_extension(cog)
 
-if (os.path.isfile(token.txt)): 
+if (os.path.isfile('token.txt')): 
         token = open("token.txt", "r").read()
 else:
         token = open("/hagaon/token.txt", "r").read()
