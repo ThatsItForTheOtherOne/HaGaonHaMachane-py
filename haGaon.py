@@ -1,0 +1,19 @@
+import discord
+from discord.ext import commands
+import json
+from urllib.request import urlopen
+import re
+
+
+bot = commands.Bot(command_prefix='>', description='HaGaon HaMachane Reborn!')
+@bot.event
+async def on_ready():
+        print(f'Logged in as {bot.user.name} ({bot.user.id}) on {len(bot.guilds)} servers')
+        
+        cog_list = ['Text','HebrewDate']
+        
+        for cog in cog_list:
+                bot.load_extension(cog)
+
+token = open("token.txt", "r").read()
+bot.run(token.strip())
