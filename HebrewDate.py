@@ -41,7 +41,7 @@ class HebrewDate(commands.Cog):
 
     @tasks.loop(hours=1)
     async def changeStatus(self):
-        game = discord.Game(self.bot.command_prefix + 'help | HaGaon 1.0! | The date is ' + await self.currentHebrewDate() + ' | Today\'s events: ' + await self.currentParshaAndHoliday())
+        game = discord.Game(self.bot.command_prefix + 'help | The date is ' + await self.currentHebrewDate() + ' | Today\'s events: ' + await self.currentParshaAndHoliday())
         await self.bot.change_presence(status=discord.Status.idle, activity=game)
 
 
