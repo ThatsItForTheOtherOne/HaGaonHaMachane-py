@@ -17,12 +17,26 @@ class HebrewDate(commands.Cog):
 
     async def currentHebrewDate(self):
         date = datetime.datetime.now()
-        date_obj = json.load(urlopen(self.api_url + "&gy=" + date.strftime('%Y') + "&gm=" + date.strftime('%m') + "&gd=" + date.strftime('%d')))
+        api_url = ''.join((self.api_url,
+                           "&gy=",
+                            date.strftime('%Y'),
+                            "&gm=",
+                            date.strftime('%m'),
+                            "&gd=",
+                            date.strftime('%d')))
+        date_obj = json.load(urlopen(api_url))
         dateStr = str(date_obj['hd']) + " " + date_obj['hm'] + ", " + str(date_obj['hy'])
         return dateStr
     async def currentParshaAndHoliday(self):
         date = datetime.datetime.now()
-        date_obj = json.load(urlopen(self.api_url + "&gy=" + date.strftime('%Y') + "&gm=" + date.strftime('%m') + "&gd=" + date.strftime('%d')))
+        api_url = ''.join((self.api_url,
+                           "&gy=",
+                            date.strftime('%Y'),
+                            "&gm=",
+                            date.strftime('%m'),
+                            "&gd=",
+                            date.strftime('%d')))
+        date_obj = json.load(urlopen(api_url))
         eventStr = ", ".join(date_obj['events'])
         return eventStr
         
@@ -36,12 +50,19 @@ class HebrewDate(commands.Cog):
     
     @commands.command(name="dailyOverview")
     async def dailyOverview(self, ctx):
-        overviewStr = 'Today\'s date is ' + await self.currentHebrewDate() + ' and the events today are: ' + await self.currentParshaAndHoliday()
+        overviewStr = ''.join(('Today\'s date is ', 
+                                await self.currentHebrewDate(), 
+                                ' and the events today are: ', 
+                                await self.currentParshaAndHoliday()))
         await createEmbed(ctx, overviewStr)
 
     @tasks.loop(hours=1)
     async def changeStatus(self):
-        game = discord.Game(self.bot.command_prefix + 'help | The date is ' + await self.currentHebrewDate() + ' | Today\'s events: ' + await self.currentParshaAndHoliday())
+        game = discord.Game(''.join((self.bot.command_prefix,
+                                     'help | The date is ',
+                                     await self.currentHebrewDate(),
+                                    ' | Today\'s events: ',
+                                    await self.currentParshaAndHoliday())))
         await self.bot.change_presence(status=discord.Status.idle, activity=game)
 
 
