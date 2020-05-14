@@ -35,9 +35,9 @@ class Text(commands.Cog):
                     parsedstring = exp.match(verse).groups()
                     sefaria_obj = json.load(urlopen(self.api_url + parsedstring[0] + '.' + parsedstring[1] + '.' + parsedstring[2] + '?context=0')) 
                     await createEmbed(ctx, cleanHtml(sefaria_obj['text']))
-   
+
     @commands.command(name="hebrewText")
-    async def textCommand(self, ctx, *verse):
+    async def hebrewTextCommand(self, ctx, *verse):
             verse = ' '.join(verse)
             if(verse.count(' ') > 1): verse = verse.replace(" ", "_", 1)
             if('-' in verse): 
