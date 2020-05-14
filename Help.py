@@ -27,6 +27,13 @@ class Help(commands.Cog):
                                               "\n\nExample: `!!text Genesis 1:1`"
                                               "\n\n`!!text <work> <chapter>:<first verse>-<last verse>`"
                                               "\n\nExample: `!!text II Kings 2:1-7`")
+            embed.add_field(name="hebrewText", inline=True, value="Grabs text from Sefaria API and posts it in Hebrew."
+                                              "\n\n__Usage__"
+                                              "\n\n`!!hebrewText <work> <chapter>:<verse>`"
+                                              "\n\nExample: `!!hebrewText Genesis 1:1`"
+                                              "\n\n`!!hebrewText <work> <chapter>:<first verse>-<last verse>`"
+                                              "\n\nExample: `!!hebrewText II Kings 2:1-7`")
+
             embed.set_footer(text=self.bot.description,icon_url='https://cdn.discordapp.com/avatars/466676353907818516/c48b21b283307d9ff454ed221dc0aaa2.jpg?size=1024')
             await ctx.send(embed=embed)
 
