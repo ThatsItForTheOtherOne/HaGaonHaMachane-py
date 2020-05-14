@@ -1,69 +1,42 @@
 import discord
 from discord.ext import commands, tasks
 from aiohttp import ClientSession
-import json
-from urllib.request import urlopen
 from sendText import createEmbed
 import datetime
-
+import hdate
 
 class HebrewDate(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.session = ClientSession(loop=bot.loop)
-        self.api_url = 'https://www.hebcal.com/converter/?cfg=json'
-        self.changeStatus.start()
 
-
-    async def currentHebrewDate(self):
-        date = datetime.datetime.now()
-        api_url = ''.join((self.api_url,
-                           "&gy=",
-                            date.strftime('%Y'),
-                            "&gm=",
-                            date.strftime('%m'),
-                            "&gd=",
-                            date.strftime('%d')))
-        date_obj = json.load(urlopen(api_url))
-        dateStr = str(date_obj['hd']) + " " + date_obj['hm'] + ", " + str(date_obj['hy'])
-        return dateStr
-    async def currentParshaAndHoliday(self):
-        date = datetime.datetime.now()
-        api_url = ''.join((self.api_url,
-                           "&gy=",
-                            date.strftime('%Y'),
-                            "&gm=",
-                            date.strftime('%m'),
-                            "&gd=",
-                            date.strftime('%d')))
-        date_obj = json.load(urlopen(api_url))
-        eventStr = ", ".join(date_obj['events'])
-        return eventStr
-        
     @commands.command(name="hebrewDate")
     async def hebrewDate(self, ctx):
-        await createEmbed(ctx, await self.currentHebrewDate())
+        date = hdate.HDate(datetime.datetime.now(), hebrew=False)
+        await createEmbed(ctx, date.hebrew_date)
 
     @commands.command(name="eventsToday")
     async def eventsToday(self, ctx):
-        await createEmbed(ctx, await self.currentParshaAndHoliday())
-    
-    @commands.command(name="dailyOverview")
-    async def dailyOverview(self, ctx):
-        overviewStr = ''.join(('Today\'s date is ', 
-                                await self.currentHebrewDate(), 
-                                ' and the events today are: ', 
-                                await self.currentParshaAndHoliday()))
-        await createEmbed(ctx, overviewStr)
+        date = hdate.HDate(datetime.datetime.now(), hebrew=False)
+        if date.is_holiday == False and 0 < date.omer_day < 50:
+            eventStr = ''.join(('The parasha is ', date.parasha, 
+                                ' and it is ', str(date.omer_day), ' days of the omer.'))
+        elif date.is_holiday == False:
+            eventStr = ''.join(('The parasha is ', date.parasha, 
+                                ' and today is not a holiday.'))
+        else:
+            eventStr = ''.join(('The parasha is  ', date.parasha, 
+                                ' and today is ', date.holiday_name, '.'))
 
-    @tasks.loop(hours=1)
-    async def changeStatus(self):
-        game = discord.Game(''.join((self.bot.command_prefix,
-                                     'help | The date is ',
-                                     await self.currentHebrewDate(),
-                                    ' | Today\'s events: ',
-                                    await self.currentParshaAndHoliday())))
-        await self.bot.change_presence(status=discord.Status.idle, activity=game)
+        await createEmbed(ctx, eventStr)
+    
+    @commands.command(name="dateToHebrew")
+    async def dateToHebrew(self, ctx, year, month, day):
+        gregorianDate = datetime.datetime(int(year), int(month), int(day))
+        date = hdate.HDate(gregorianDate, hebrew=False)
+        await createEmbed(ctx, date.hebrew_date)
+
+
 
 
 
