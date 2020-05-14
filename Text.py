@@ -35,6 +35,25 @@ class Text(commands.Cog):
                     parsedstring = exp.match(verse).groups()
                     sefaria_obj = json.load(urlopen(self.api_url + parsedstring[0] + '.' + parsedstring[1] + '.' + parsedstring[2] + '?context=0')) 
                     await createEmbed(ctx, cleanHtml(sefaria_obj['text']))
+   
+    @commands.command(name="hebrewText")
+    async def textCommand(self, ctx, *verse):
+            verse = ' '.join(verse)
+            if(verse.count(' ') > 1): verse = verse.replace(" ", "_", 1)
+            if('-' in verse): 
+                    exp = re.compile(r'(\S+)\s(\S+):(\d+)-(\d+)', re.IGNORECASE)
+                    parsedstring = exp.match(verse).groups()
+                    sefaria_obj = json.load(urlopen(self.api_url + parsedstring[0] + '.' + parsedstring[1] + '.' + parsedstring[2]))
+                    versetext = ''
+                    for x in range(int(parsedstring[2]) - 1, int(parsedstring[3])):
+                            versetext = versetext + ' ' + sefaria_obj['he'][x]
+                    await createEmbed(ctx, cleanHtml(versetext))
+            else:
+                    exp = re.compile(r'(\S+)\s(\S+):(\d+)', re.IGNORECASE)
+                    parsedstring = exp.match(verse).groups()
+                    sefaria_obj = json.load(urlopen(self.api_url + parsedstring[0] + '.' + parsedstring[1] + '.' + parsedstring[2] + '?context=0')) 
+                    await createEmbed(ctx, cleanHtml(sefaria_obj['he']))
+
 
 def setup(bot):
     bot.add_cog(Text(bot))
