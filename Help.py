@@ -42,9 +42,13 @@ class Help(commands.Cog):
             embed.add_field(name="hebrewDate", inline=True, value="Converts today\'s date to the Hebrew date"
                                               "\n\n__Usage__"
                                               "\n\nExample: `!!hebrewDate`")
-            embed.add_field(name="dailyOverview", inline=True, value="Converts today\'s date to the Hebrew date and grabs daily events"
+            embed.add_field(name="eventsToday", inline=True, value="Prints daily event, including Omer count and holidays"
                                               "\n\n__Usage__"
                                               "\n\nExample: `!!dailyOverview`")
+            embed.add_field(name="dateToHebrew", inline=True, value="Converts a date to the date on the Hebrew calendar"
+                                                "\n\n__Usage__"
+                                                "\n\n``!!dateToHebrew <year> <month> <day>"
+                                                "\n\nExample `!!dateToHebrew 2020 1 1`")                                 
             embed.set_footer(text=self.bot.description,icon_url='https://cdn.discordapp.com/avatars/466676353907818516/c48b21b283307d9ff454ed221dc0aaa2.jpg?size=1024')
             await ctx.send(embed=embed)
             
