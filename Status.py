@@ -2,8 +2,6 @@ import discord
 from discord.ext import commands, tasks
 from aiohttp import ClientSession
 import datetime
-import json
-from urllib.request import urlopen
 import hdate
 
 class Status(commands.Cog):
