@@ -26,11 +26,11 @@ class Text(commands.Cog):
                     exp = re.compile(r'(\S+)\s(\S+):(\d+)-(\d+)', re.IGNORECASE)
                     parsedstring = exp.match(verse).groups()
                     api_url = ''.join((self.api_url,
-                                       parsedstring[0], 
-                                       '.', 
-                                       parsedstring[1], 
-                                       '.', 
-                                       parsedstring[2]))
+                                parsedstring[0], 
+                                '.', 
+                                parsedstring[1], 
+                                '.', 
+                                parsedstring[2]))
                     sefaria_obj = json.load(urlopen(api_url))
                     versetext = ''
                     for x in range(int(parsedstring[2]) - 1, int(parsedstring[3])):
@@ -40,12 +40,12 @@ class Text(commands.Cog):
                     exp = re.compile(r'(\S+)\s(\S+):(\d+)', re.IGNORECASE)
                     parsedstring = exp.match(verse).groups()
                     api_url = ''.join((self.api_url,
-                                       parsedstring[0], 
-                                       '.', 
-                                       parsedstring[1], 
-                                       '.', 
-                                       parsedstring[2],
-                                       '?context=0'))
+                                parsedstring[0], 
+                                '.', 
+                                parsedstring[1], 
+                                '.', 
+                                parsedstring[2],
+                                '?context=0'))
                     sefaria_obj = json.load(urlopen(api_url)) 
                     await createEmbed(ctx, cleanHtml(sefaria_obj['text']))
 
@@ -57,11 +57,11 @@ class Text(commands.Cog):
                     exp = re.compile(r'(\S+)\s(\S+):(\d+)-(\d+)', re.IGNORECASE)
                     parsedstring = exp.match(verse).groups()                   
                     api_url = ''.join((self.api_url,
-                                       parsedstring[0], 
-                                       '.', 
-                                       parsedstring[1], 
-                                       '.', 
-                                       parsedstring[2]))
+                                parsedstring[0], 
+                                '.', 
+                                parsedstring[1], 
+                                '.', 
+                                parsedstring[2]))
                     sefaria_obj = json.load(urlopen(api_url))
                     versetext = ''
                     for x in range(int(parsedstring[2]) - 1, int(parsedstring[3])):
@@ -71,12 +71,12 @@ class Text(commands.Cog):
                     exp = re.compile(r'(\S+)\s(\S+):(\d+)', re.IGNORECASE)
                     parsedstring = exp.match(verse).groups()
                     api_url = ''.join((self.api_url,
-                                       parsedstring[0], 
-                                       '.', 
-                                       parsedstring[1], 
-                                       '.', 
-                                       parsedstring[2],
-                                       '?context=0'))
+                                parsedstring[0], 
+                                '.', 
+                                parsedstring[1], 
+                                '.', 
+                                parsedstring[2],
+                                '?context=0'))
                     sefaria_obj = json.load(urlopen(api_url)) 
                     await createEmbed(ctx, cleanHtml(sefaria_obj['he']))
 
