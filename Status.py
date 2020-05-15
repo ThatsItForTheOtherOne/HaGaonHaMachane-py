@@ -30,7 +30,7 @@ class Status(commands.Cog):
                                      await self.currentHebrewDate(),
                                     ' | Today\'s parasha: ',
                                     await self.currentParasha())))
-        await self.bot.change_presence(status=discord.Status.idle, activity=game)
+        await self.bot.change_presence(status=discord.Status.online, activity=game)
 
 def setup(bot):
     bot.add_cog(Status(bot))
