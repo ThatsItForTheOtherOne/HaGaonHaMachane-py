@@ -47,7 +47,7 @@ class Help(commands.Cog):
                                               "\n\nExample: `!!dailyOverview`")
             embed.add_field(name="dateToHebrew", inline=True, value="Converts a date to the date on the Hebrew calendar"
                                                 "\n\n__Usage__"
-                                                "\n\n``!!dateToHebrew <year> <month> <day>"
+                                                "\n\n``!!dateToHebrew <year> <month> <day>``"
                                                 "\n\nExample `!!dateToHebrew 2020 1 1`")                                 
             embed.set_footer(text=self.bot.description,icon_url='https://cdn.discordapp.com/avatars/466676353907818516/c48b21b283307d9ff454ed221dc0aaa2.jpg?size=1024')
             await ctx.send(embed=embed)
