@@ -20,7 +20,7 @@ class HebrewDate(commands.Cog):
         date = hdate.HDate(datetime.datetime.now(), hebrew=False)
         if date.is_holiday == False and 0 < date.omer_day < 50:
             eventStr = ''.join(('The parasha is ', date.parasha, 
-                                ' and it is ', str(date.omer_day), ' days of the omer.'))
+                                ' and it is', str(date.omer_day), ' days in the omer.'))
         elif date.is_holiday == False:
             eventStr = ''.join(('The parasha is ', date.parasha, 
                                 ' and today is not a holiday.'))
