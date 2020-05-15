@@ -5,7 +5,7 @@ from urllib.request import urlopen
 import re
 import os.path
 
-bot = commands.Bot(command_prefix='!!', description='Version 1.0')
+bot = commands.Bot(command_prefix='!!', description='HaGaon HaMachane Version 1.2')
 bot.remove_command('help')
 
 @bot.event
