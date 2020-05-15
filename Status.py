@@ -26,10 +26,10 @@ class Status(commands.Cog):
     @tasks.loop(hours=1)
     async def changeStatus(self):
         game = discord.Game(''.join((self.bot.command_prefix,
-                                     'help | The date is ',
-                                     await self.currentHebrewDate(),
-                                    ' | Today\'s parasha: ',
-                                    await self.currentParasha())))
+                                'help | The date is ',
+                                await self.currentHebrewDate(),
+                                ' | Today\'s parasha: ',
+                                await self.currentParasha())))
         await self.bot.change_presence(status=discord.Status.online, activity=game)
 
 def setup(bot):

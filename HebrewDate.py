@@ -20,17 +20,16 @@ class HebrewDate(commands.Cog):
         date = hdate.HDate(datetime.datetime.now(), hebrew=False)
         if date.is_holiday == False and 0 < date.omer_day < 50:
             eventStr = ''.join(('The parasha is ', date.parasha, 
-                                ' and it is ', str(date.omer_day), ' days in the omer.'
-                                ' The daf yomi is ', date.daf_yomi, '.'))
+                        ' and it is ', str(date.omer_day), ' days in the omer.'
+                        ' The daf yomi is ', date.daf_yomi, '.'))
         elif date.is_holiday == False:
             eventStr = ''.join(('The parasha is ', date.parasha, 
-                                ' and today is not a holiday.'
-                                ' The daf yomi is ', date.daf_yomi, '.'))
+                        ' and today is not a holiday.'
+                        ' The daf yomi is ', date.daf_yomi, '.'))
         else:
             eventStr = ''.join(('The parasha is  ', date.parasha, 
-                                ' and today is ', date.holiday_name, '.'
-                                ' The daf yomi is ', date.daf_yomi, '.'))
-
+                        ' and today is ', date.holiday_name, '.'
+                        ' The daf yomi is ', date.daf_yomi, '.'))
         await createEmbed(ctx, eventStr)
     
     @commands.command(name="dateToHebrew")
