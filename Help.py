@@ -78,7 +78,7 @@ class Help(commands.Cog):
                 inline=True,
                 value="Prints daily event, including Omer count and holidays"
                 "\n\n__Usage__"
-                "\n\nExample: `!!dailyOverview`",
+                "\n\nExample: `!!eventsToday`",
             )
             embed.add_field(
                 name="dateToHebrew",
