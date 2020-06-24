@@ -23,7 +23,7 @@ class Text(commands.Cog):
     async def textCommand(self, ctx, *verse):
         verse = " ".join(verse)
         if verse.count(" ") > 1:
-            verse = verse.replace(" ", "_", 1)
+            verse = re.sub(r"[^\S\r\n](?=[A-z])", '_', verse)
         if "-" in verse:
             exp = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE)
             parsedstring = exp.match(verse).groups()
@@ -63,7 +63,7 @@ class Text(commands.Cog):
     async def hebrewTextCommand(self, ctx, *verse):
         verse = " ".join(verse)
         if verse.count(" ") > 1:
-            verse = verse.replace(" ", "_", 1)
+            verse = re.sub(r"[^\S\r\n](?=[A-z])", '_', verse)
         if "-" in verse:
             exp = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE)
             parsedstring = exp.match(verse).groups()
