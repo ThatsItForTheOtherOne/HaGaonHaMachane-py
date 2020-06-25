@@ -1,8 +1,5 @@
 import discord
 from discord.ext import commands
-import json
-from urllib.request import urlopen
-import re
 import os.path
 
 bot = commands.Bot(command_prefix="!!", description="HaGaon HaMachane Version 1.2")
