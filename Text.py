@@ -12,7 +12,6 @@ def cleanHtml(raw_html):
     cleantext = re.sub(cleanr, "", raw_html)
     return cleantext
 
-
 class Text(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -22,8 +21,7 @@ class Text(commands.Cog):
     @commands.command(name="text")
     async def textCommand(self, ctx, *verse):
         verse = " ".join(verse)
-        if verse.count(" ") > 1:
-            verse = re.sub(r"[^\S\r\n](?=[A-z])", '_', verse)
+        verse = re.sub(r"[^\S\r\n](?=[A-z])", '_', verse)
         if "-" in verse:
             exp = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE)
             parsedstring = exp.match(verse).groups()
