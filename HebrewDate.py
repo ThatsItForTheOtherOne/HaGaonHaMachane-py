@@ -27,40 +27,40 @@ class HebrewDate(commands.Cog):
             eventStr = "".join(
                 (
                     "Parsha: ",
-                    sefaria_obj['calendar_items'][0]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][0]["displayValue"]["en"],
                     "\nHaftarah: ",
-                    sefaria_obj['calendar_items'][1]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][1]["displayValue"]["en"],
                     "\nOmer count: ",
                     str(date.omer_day),
                     "\nDaf Yomi: ",
-                    sefaria_obj['calendar_items'][2]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][2]["displayValue"]["en"],
                     "\nMishnah Yomit: ",
-                    sefaria_obj['calendar_items'][4]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][4]["displayValue"]["en"],
                     "\nDaily Rambam 1 Chapter: ",
-                    sefaria_obj['calendar_items'][5]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][5]["displayValue"]["en"],
                     "\nDaily Rambam 3 Chapters: ",
-                    sefaria_obj['calendar_items'][6]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][6]["displayValue"]["en"],
                     "\nHalakha Yomit: ",
-                    sefaria_obj['calendar_items'][8]['displayValue']['en']
+                    sefaria_obj["calendar_items"][8]["displayValue"]["en"],
                 )
             )
         elif date.is_holiday == False:
             eventStr = "".join(
                 (
                     "Parsha: ",
-                    sefaria_obj['calendar_items'][0]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][0]["displayValue"]["en"],
                     "\nHaftarah: ",
-                    sefaria_obj['calendar_items'][1]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][1]["displayValue"]["en"],
                     "\nDaf Yomi: ",
-                    sefaria_obj['calendar_items'][2]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][2]["displayValue"]["en"],
                     "\nMishnah Yomit: ",
-                    sefaria_obj['calendar_items'][4]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][4]["displayValue"]["en"],
                     "\nDaily Rambam 1 Chapter: ",
-                    sefaria_obj['calendar_items'][5]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][5]["displayValue"]["en"],
                     "\nDaily Rambam 3 Chapters: ",
-                    sefaria_obj['calendar_items'][6]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][6]["displayValue"]["en"],
                     "\nHalakha Yomit: ",
-                    sefaria_obj['calendar_items'][8]['displayValue']['en']
+                    sefaria_obj["calendar_items"][8]["displayValue"]["en"],
                 )
             )
         else:
@@ -69,19 +69,19 @@ class HebrewDate(commands.Cog):
                     "Holiday: ",
                     date.holiday_name,
                     "Parsha: ",
-                    sefaria_obj['calendar_items'][0]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][0]["displayValue"]["en"],
                     "\nHaftarah: ",
-                    sefaria_obj['calendar_items'][1]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][1]["displayValue"]["en"],
                     "\nDaf Yomi: ",
-                    sefaria_obj['calendar_items'][2]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][2]["displayValue"]["en"],
                     "\nMishnah Yomit: ",
-                    sefaria_obj['calendar_items'][4]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][4]["displayValue"]["en"],
                     "\nDaily Rambam 1 Chapter: ",
-                    sefaria_obj['calendar_items'][5]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][5]["displayValue"]["en"],
                     "\nDaily Rambam 3 Chapters: ",
-                    sefaria_obj['calendar_items'][6]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][6]["displayValue"]["en"],
                     "\nHalakha Yomit: ",
-                    sefaria_obj['calendar_items'][8]['displayValue']['en']
+                    sefaria_obj["calendar_items"][8]["displayValue"]["en"],
                 )
             )
         await createEmbed(ctx, eventStr)
