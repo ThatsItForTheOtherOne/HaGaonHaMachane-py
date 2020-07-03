@@ -3,13 +3,14 @@ from discord.ext import commands, tasks
 from aiohttp import ClientSession
 import datetime
 import hdate
-
+import json
+from urllib.request import urlopen
 
 class Status(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.session = ClientSession(loop=bot.loop)
-        self.api_url = "https://www.hebcal.com/converter/?cfg=json"
+        self.api_url = "https://www.sefaria.org/api/calendars"
         self.changeStatus.start()
 
     async def currentHebrewDate(self):
@@ -23,6 +24,7 @@ class Status(commands.Cog):
 
     @tasks.loop(hours=1)
     async def changeStatus(self):
+        sefaria_obj = json.load(urlopen(self.api_url))
         game = discord.Game(
             "".join(
                 (
@@ -30,7 +32,9 @@ class Status(commands.Cog):
                     "help | The date is ",
                     await self.currentHebrewDate(),
                     " | Today's parasha: ",
-                    await self.currentParasha(),
+                    sefaria_obj['calendar_items'][0]['displayValue']['en'],
+                    " | Today's Haftarah: ",
+                    sefaria_obj['calendar_items'][1]['displayValue']['en']
                 )
             )
         )
