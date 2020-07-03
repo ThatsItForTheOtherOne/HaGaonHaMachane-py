@@ -6,6 +6,7 @@ import hdate
 import json
 from urllib.request import urlopen
 
+
 class Status(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -32,9 +33,9 @@ class Status(commands.Cog):
                     "help | The date is ",
                     await self.currentHebrewDate(),
                     " | Today's parasha: ",
-                    sefaria_obj['calendar_items'][0]['displayValue']['en'],
+                    sefaria_obj["calendar_items"][0]["displayValue"]["en"],
                     " | Today's Haftarah: ",
-                    sefaria_obj['calendar_items'][1]['displayValue']['en']
+                    sefaria_obj["calendar_items"][1]["displayValue"]["en"],
                 )
             )
         )
