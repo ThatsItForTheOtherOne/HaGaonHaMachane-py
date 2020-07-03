@@ -8,9 +8,7 @@ from aiohttp import ClientSession
 
 
 def cleanHtml(raw_html):
-    cleanr = re.compile("<.*?>")
-    cleantext = re.sub(cleanr, "", raw_html)
-    return cleantext
+    return re.sub(re.compile("<.*?>"), "", raw_html)
 
 class Text(commands.Cog):
     def __init__(self, bot):
