@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 import os.path
 
-bot = commands.Bot(command_prefix="!!", description="HaGaon HaMachane Version 1.2")
+bot = commands.Bot(command_prefix="!!", description="HaGaon HaMachane Version 1.4")
 bot.remove_command("help")
 
 
