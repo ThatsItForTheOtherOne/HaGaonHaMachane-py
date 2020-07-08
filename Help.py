@@ -88,6 +88,23 @@ class Help(commands.Cog):
                 "\n\n``!!dateToHebrew <year> <month> <day>``"
                 "\n\nExample: `!!dateToHebrew 2020 1 1`",
             )
+            embed.add_field(
+                name="setLocation",
+                inline=True,
+                value="Sets a location for zmanim Latitude and Longitude assume N and E"
+                "\n\n__Usage__"
+                "\n\n``!!setLocation <Latitude> <Longitude> <tzdata timezone> <diaspora true/false>``"
+                "\n\nExample: `!!setLocation 40.7128 -74.0060 America/New_York True`",
+            )
+            embed.add_field(
+                name="Zmanim",
+                inline=True,
+                value="Prints Zmanim (You must run setLocation first!!!)"
+                "\n\n__Usage__"
+                "\n\n``!!zmanim``"
+                "\n\nExample: `!!zmanim`",
+            )
+
             embed.set_footer(
                 text=self.bot.description,
                 icon_url="https://cdn.discordapp.com/avatars/466676353907818516/c48b21b283307d9ff454ed221dc0aaa2.jpg?size=1024",
