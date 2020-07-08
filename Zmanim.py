@@ -38,14 +38,17 @@ class Zmanim(commands.Cog):
         cursor = db.cursor()
         cursor.execute(f"SELECT * FROM main WHERE user_id = {ctx.message.author.id}")
         result = cursor.fetchone()
-        dias = result[4].lower() == "true"
-        location = hdate.Location(
-            longitude=float(result[2]),
-            latitude=float(result[1]),
-            timezone=result[3],
-            diaspora=dias,
-        )
-        await createEmbed(ctx, str(hdate.Zmanim(location=location, hebrew=False)))
+        if result is None:
+            await createEmbed(ctx, "Run setLocation first!!")
+        elif result is not None:
+            dias = (result[4] == "True")
+            location = hdate.Location(
+                longitude=float(result[2]),
+                latitude=float(result[1]),
+                timezone=result[3],
+                diaspora=dias,
+            )
+            await createEmbed(ctx, str(hdate.Zmanim(location=location, hebrew=False)))
 
 
 def setup(bot):
