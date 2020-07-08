@@ -91,7 +91,7 @@ class Help(commands.Cog):
             embed.add_field(
                 name="setLocation",
                 inline=True,
-                value="Sets a location for zmanim Latitude and Longitude assume N and E"
+                value="Sets a location for zmanim Latitude and Longitude assume N and E and timezones must follow tzdata[https://en.wikipedia.org/wiki/List_of_tz_database_time_zones] standards"
                 "\n\n__Usage__"
                 "\n\n``!!setLocation <Latitude> <Longitude> <tzdata timezone> <diaspora true/false>``"
                 "\n\nExample: `!!setLocation 40.7128 -74.0060 America/New_York True`",
