@@ -67,8 +67,8 @@ class HebrewDate(commands.Cog):
             eventStr = "".join(
                 (
                     "Holiday: ",
-                    date.holiday_name,
-                    "Parsha: ",
+                    date.holiday_description,
+                    "\nParsha: ",
                     sefaria_obj["calendar_items"][0]["displayValue"]["en"],
                     "\nHaftarah: ",
                     sefaria_obj["calendar_items"][1]["displayValue"]["en"],
