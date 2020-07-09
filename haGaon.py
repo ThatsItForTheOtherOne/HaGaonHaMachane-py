@@ -23,7 +23,6 @@ async def on_ready():
         )"""
         )
     print(f"Logged in as {bot.user.name} ({bot.user.id}) on {len(bot.guilds)} servers")
-    print(bot.guilds)
 
     cog_list = ["Text", "HebrewDate", "OldCommands", "Help", "Status", "Zmanim"]
 
