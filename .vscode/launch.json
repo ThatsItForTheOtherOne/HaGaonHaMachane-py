@@ -8,7 +8,7 @@
             "name": "Python: HaGaon HaMachane",
             "type": "python",
             "request": "launch",
-            "program": "hagaon.py",
+            "program": "haGaon.py",
             "console": "integratedTerminal"
         }
     ]
