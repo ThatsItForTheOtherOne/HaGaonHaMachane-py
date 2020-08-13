@@ -14,14 +14,9 @@ class Status(commands.Cog):
         self.api_url = "https://www.sefaria.org/api/calendars"
         self.changeStatus.start()
 
-    async def currentHebrewDate(self):
+    async def current_hebrew_date(self):
         date = hdate.HDate(datetime.datetime.now(), hebrew=False)
         return date.hebrew_date
-
-    async def currentParasha(self):
-        date = hdate.HDate(datetime.datetime.now(), hebrew=False)
-        parashaStr = " ".join(("Parashat", date.parasha))
-        return parashaStr
 
     @tasks.loop(hours=1)
     async def changeStatus(self):
@@ -31,7 +26,7 @@ class Status(commands.Cog):
                 (
                     self.bot.command_prefix,
                     "help | The date is ",
-                    await self.currentHebrewDate(),
+                    await self.current_hebrew_date(),
                     " | Today's parasha: ",
                     sefaria_obj["calendar_items"][0]["displayValue"]["en"],
                     " | Today's Haftarah: ",

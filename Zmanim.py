@@ -20,8 +20,8 @@ class Zmanim(commands.Cog):
             db = sqlite3.connect("haGaon.db")
             cursor = db.cursor()
             cursor.execute(
-              f"SELECT user_id FROM main WHERE user_id = {ctx.message.author.id}"
-         )
+                f"SELECT user_id FROM main WHERE user_id = {ctx.message.author.id}"
+            )
             result = cursor.fetchone()
             if result is None:
                 sql = "INSERT INTO main(user_id, latitude, longitude, timezone, diaspora) VALUES(?, ?, ?, ?, ?)"
@@ -44,7 +44,7 @@ class Zmanim(commands.Cog):
         if result is None:
             await createEmbed(ctx, "Run setLocation first!!")
         elif result is not None:
-            dias = (result[4] == "True")
+            dias = result[4] == "True"
             location = hdate.Location(
                 longitude=float(result[2]),
                 latitude=float(result[1]),

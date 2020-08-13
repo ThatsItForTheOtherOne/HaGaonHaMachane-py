@@ -13,7 +13,7 @@ async def on_ready():
         db = sqlite3.connect("haGaon.db")
         cursor = db.cursor()
         cursor.execute(
-        """
+            """
         CREATE TABLE IF NOT EXISTS main(
         user_id TEXT,
         latitude TEXT,
@@ -21,7 +21,8 @@ async def on_ready():
         timezone TEXT,
         diaspora TEXT
         )
-        """)
+        """
+        )
     print(f"Logged in as {bot.user.name} ({bot.user.id}) on {len(bot.guilds)} servers")
 
     cog_list = ["Text", "HebrewDate", "OldCommands", "Help", "Status", "Zmanim"]
