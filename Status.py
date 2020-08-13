@@ -19,7 +19,7 @@ class Status(commands.Cog):
         return date.hebrew_date
 
     @tasks.loop(hours=1)
-    async def changeStatus(self):
+    async def change_status(self):
         sefaria_obj = json.load(urlopen(self.api_url))
         game = discord.Game(
             "".join(
