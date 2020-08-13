@@ -40,7 +40,7 @@ class Text(commands.Cog):
         else:
             exp = re.compile(r"(\S+)\s(\S+):(\d+)", re.IGNORECASE)
             parsedstring = exp.match(verse).groups()
-            api_url = f"{self.api_url}{parsedstring[0]}.{parsedstring[1]}.{parsedstring[2]}?context=0&ven={self.get_translation(ctx, parsedstring[0])}"
+            api_url = f"{self.api_url}{parsedstring[0]}.{parsedstring[1]}.{parsedstring[2]}?context=0{self.get_translation(ctx, parsedstring[0])}"
             sefaria_obj = json.load(urlopen(api_url))
             await createEmbed(ctx, md(sefaria_obj["text"]))
 
