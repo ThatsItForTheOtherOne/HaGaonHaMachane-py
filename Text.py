@@ -19,7 +19,9 @@ class Text(commands.Cog):
     
     def get_translation(self, ctx, book):
         if book in ["Genesis", "Exodus", "Leviticus", "Numbers", "Deteronomy"]:
-            return "The_Koren_Jerusalem_Bible"
+            return "&ven=The_Koren_Jerusalem_Bible"
+        else:
+            return ""
 
 
     @commands.command(name="text")
@@ -30,7 +32,7 @@ class Text(commands.Cog):
         if "-" in verse:
             exp = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE)
             parsedstring = exp.match(verse).groups()
-            api_url = f"{self.api_url}{parsedstring[0]}.{parsedstring[1]}.{parsedstring[2]}?ven={self.get_translation(ctx, parsedstring[0])}"
+            api_url = f"{self.api_url}{parsedstring[0]}.{parsedstring[1]}.{parsedstring[2]}?{self.get_translation(ctx, parsedstring[0])}"
             sefaria_obj = json.load(urlopen(api_url))
             versetext = ""
             for x in range(int(parsedstring[2]) - 1, int(parsedstring[3])):
