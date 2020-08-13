@@ -6,6 +6,8 @@ import re
 from sendText import createEmbed
 from aiohttp import ClientSession
 import html2text
+import sqlite3
+
 
 
 
@@ -14,6 +16,11 @@ class Text(commands.Cog):
         self.bot = bot
         self.session = ClientSession(loop=bot.loop)
         self.api_url = "https://www.sefaria.org/api/texts/"
+    
+    def get_translation(self, ctx, book):
+        if book in ["Genesis", "Exodus", "Leviticus", "Numbers", "Deteronomy"]:
+            return "The_Koren_Jerusalem_Bible"
+
 
     @commands.command(name="text")
     async def textCommand(self, ctx, *verse):
@@ -23,7 +30,7 @@ class Text(commands.Cog):
         if "-" in verse:
             exp = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE)
             parsedstring = exp.match(verse).groups()
-            api_url = f"{self.api_url}{parsedstring[0]}.{parsedstring[1]}.{parsedstring[2]}"
+            api_url = f"{self.api_url}{parsedstring[0]}.{parsedstring[1]}.{parsedstring[2]}?ven={self.get_translation(ctx, parsedstring[0])}"
             sefaria_obj = json.load(urlopen(api_url))
             versetext = ""
             for x in range(int(parsedstring[2]) - 1, int(parsedstring[3])):
@@ -32,7 +39,7 @@ class Text(commands.Cog):
         else:
             exp = re.compile(r"(\S+)\s(\S+):(\d+)", re.IGNORECASE)
             parsedstring = exp.match(verse).groups()
-            api_url = f"{self.api_url}{parsedstring[0]}.{parsedstring[1]}.{parsedstring[2]}?context=0"
+            api_url = f"{self.api_url}{parsedstring[0]}.{parsedstring[1]}.{parsedstring[2]}?context=0&ven={self.get_translation(ctx, parsedstring[0])}"
             sefaria_obj = json.load(urlopen(api_url))
             await createEmbed(ctx, h.handle(sefaria_obj["text"]))
 

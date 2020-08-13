@@ -26,7 +26,7 @@ class Help(commands.Cog):
             )
             embed.add_field(
                 name="Help",
-                value="• Code: https://github.com/Acher224/HaGaonHaMachane-py\n •Invite: https://discord.com/oauth2/authorize?client_id=466676353907818516&scope=bot&permissions=68608",
+                value="• Code: https://github.com/Acher224/HaGaonHaMachane-py\n •Invite: TEMPORARILY REMOVED (DM for reason)",
                 inline=False,
             )
             embed.set_footer(
