@@ -3,7 +3,7 @@ from discord.ext import commands
 import os.path
 import sqlite3
 
-bot = commands.Bot(command_prefix="!!", description="HaGaon HaMachane Version 2.0")
+bot = commands.Bot(command_prefix="!!", description="HaGaon HaMachane Version 2.1")
 bot.remove_command("help")
 
 
@@ -20,8 +20,8 @@ async def on_ready():
         longitude TEXT,
         timezone TEXT,
         diaspora TEXT
-        )"""
         )
+        """)
     print(f"Logged in as {bot.user.name} ({bot.user.id}) on {len(bot.guilds)} servers")
 
     cog_list = ["Text", "HebrewDate", "OldCommands", "Help", "Status", "Zmanim"]
