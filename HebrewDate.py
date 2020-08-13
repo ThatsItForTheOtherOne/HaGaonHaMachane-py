@@ -15,12 +15,12 @@ class HebrewDate(commands.Cog):
         self.api_url = "https://www.sefaria.org/api/calendars"
 
     @commands.command(name="hebrewDate")
-    async def hebrewDate(self, ctx):
+    async def hebrew_date(self, ctx):
         date = hdate.HDate(datetime.datetime.now(), hebrew=False)
         await createEmbed(ctx, date.hebrew_date)
 
     @commands.command(name="eventsToday")
-    async def eventsToday(self, ctx):
+    async def events_today(self, ctx):
         date = hdate.HDate(datetime.datetime.now(), hebrew=False)
         sefaria_obj = json.load(urlopen(self.api_url))
         if date.is_holiday == False and 0 < date.omer_day < 50:
@@ -87,7 +87,7 @@ class HebrewDate(commands.Cog):
         await createEmbed(ctx, eventStr)
 
     @commands.command(name="dateToHebrew")
-    async def dateToHebrew(self, ctx, year, month, day):
+    async def date_to_hebrew(self, ctx, year, month, day):
         gregorianDate = datetime.datetime(int(year), int(month), int(day))
         date = hdate.HDate(gregorianDate, hebrew=False)
         await createEmbed(ctx, date.hebrew_date)

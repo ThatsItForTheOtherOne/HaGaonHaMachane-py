@@ -4,7 +4,7 @@ from aiohttp import ClientSession
 from sendText import createEmbed
 
 
-async def sendDepcrecatedMessage(self, ctx):
+async def send_depcrecated_message(self, ctx):
     await createEmbed(
         ctx,
         "These Commands are now deprecated. Use "
@@ -20,15 +20,15 @@ class OldCommands(commands.Cog):
 
     @commands.command(name="tanakh")
     async def tanakh(self, ctx):
-        await sendDepcrecatedMessage(self, ctx)
+        await send_depcrecated_message(self, ctx)
 
     @commands.command(name="mishnah")
     async def mishnah(self, ctx):
-        await sendDepcrecatedMessage(self, ctx)
+        await send_depcrecated_message(self, ctx)
 
     @commands.command(name="talmud")
     async def talmud(self, ctx):
-        await sendDepcrecatedMessage(self, ctx)
+        await send_depcrecated_message(self, ctx)
 
 
 def setup(bot):

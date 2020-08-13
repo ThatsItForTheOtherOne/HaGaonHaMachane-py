@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 
 
-async def createEmbed(ctx, text):
+async def create_embed(ctx, text):
     if len(text) > 2048:
         await ctx.send("MESSAGE TOO LONG!")
         return

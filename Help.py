@@ -10,7 +10,7 @@ class Help(commands.Cog):
         self.session = ClientSession(loop=bot.loop)
 
     @commands.command(name="help")
-    async def helpCommand(self, ctx, *, command: str = "help"):
+    async def help_command(self, ctx, *, command: str = "help"):
         command = command.lower()
 
         if command == "help":
