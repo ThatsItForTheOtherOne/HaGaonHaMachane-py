@@ -83,7 +83,7 @@ class Text(commands.Cog):
 
             book = parsed_string[0]
             chapter = int(parsed_string[1])
-            verse = int(parsed_string[2]) - 1
+            verse = int(parsed_string[2])
 
             api_url = f"{self.api_url}{book}.{chapter}.{verse}?context=0{self.get_translation(ctx, book)}"
             sefaria_obj = json.load(urlopen(api_url))
@@ -111,7 +111,7 @@ class Text(commands.Cog):
 
             book = parsed_string[0]
             chapter = int(parsed_string[1])
-            verse = int(parsed_string[2]) - 1
+            verse = int(parsed_string[2])
 
             api_url = f"{self.api_url}{book}.{chapter}.{verse}?context=0"
             sefaria_obj = json.load(urlopen(api_url))
