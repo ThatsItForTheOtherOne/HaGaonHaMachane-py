@@ -22,17 +22,12 @@ class Status(commands.Cog):
     async def change_status(self):
         sefaria_obj = json.load(urlopen(self.api_url))
         game = discord.Game(
-            "".join(
-                (
-                    self.bot.command_prefix,
-                    "help | The date is ",
-                    await self.current_hebrew_date(),
-                    " | Today's parasha: ",
-                    sefaria_obj["calendar_items"][0]["displayValue"]["en"],
-                    " | Today's Haftarah: ",
-                    sefaria_obj["calendar_items"][1]["displayValue"]["en"],
-                )
-            )
+            f"""
+                    {self.bot.command_prefix}help
+                    | The date is {await self.current_hebrew_date()} 
+                    | Today's Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
+                    | Today's Haftarah: {sefaria_obj["calendar_items"][1]["displayValue"]["en"]}
+                    """
         )
         await self.bot.change_presence(status=discord.Status.online, activity=game)
 
