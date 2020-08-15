@@ -21,69 +21,40 @@ class HebrewDate(commands.Cog):
 
     @commands.command(name="eventsToday")
     async def events_today(self, ctx):
-        date = hdate.HDate(datetime.datetime.now(), hebrew=False)
+        date = hdate.HDate(datetime.datetime(2020, 4, 13), hebrew=False)
         sefaria_obj = json.load(urlopen(self.api_url))
         if date.is_holiday == False and 0 < date.omer_day < 50:
-            event_string = "".join(
-                (
-                    "Parsha: ",
-                    sefaria_obj["calendar_items"][0]["displayValue"]["en"],
-                    "\nHaftarah: ",
-                    sefaria_obj["calendar_items"][1]["displayValue"]["en"],
-                    "\nOmer count: ",
-                    str(date.omer_day),
-                    "\nDaf Yomi: ",
-                    sefaria_obj["calendar_items"][2]["displayValue"]["en"],
-                    "\nMishnah Yomit: ",
-                    sefaria_obj["calendar_items"][4]["displayValue"]["en"],
-                    "\nDaily Rambam 1 Chapter: ",
-                    sefaria_obj["calendar_items"][5]["displayValue"]["en"],
-                    "\nDaily Rambam 3 Chapters: ",
-                    sefaria_obj["calendar_items"][6]["displayValue"]["en"],
-                    "\nHalakha Yomit: ",
-                    sefaria_obj["calendar_items"][8]["displayValue"]["en"],
-                )
-            )
+            event_string = f"""
+                    Omer: {date.omer_day}
+                    Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
+                    Haftarah: {sefaria_obj["calendar_items"][1]["displayValue"]["en"]}
+                    Daf Yomi: {sefaria_obj["calendar_items"][2]["displayValue"]["en"]}
+                    Mishnah Yomit: {sefaria_obj["calendar_items"][4]["displayValue"]["en"]}
+                    Daily Rambam 1 Chapter: {sefaria_obj["calendar_items"][5]["displayValue"]["en"]}
+                    Daily Rambam 3 Chapters: {sefaria_obj["calendar_items"][6]["displayValue"]["en"]}
+                    Halakha Yomit: {sefaria_obj["calendar_items"][8]["displayValue"]["en"]}
+                    """
         elif date.is_holiday == False:
-            event_string = "".join(
-                (
-                    "Parsha: ",
-                    sefaria_obj["calendar_items"][0]["displayValue"]["en"],
-                    "\nHaftarah: ",
-                    sefaria_obj["calendar_items"][1]["displayValue"]["en"],
-                    "\nDaf Yomi: ",
-                    sefaria_obj["calendar_items"][2]["displayValue"]["en"],
-                    "\nMishnah Yomit: ",
-                    sefaria_obj["calendar_items"][4]["displayValue"]["en"],
-                    "\nDaily Rambam 1 Chapter: ",
-                    sefaria_obj["calendar_items"][5]["displayValue"]["en"],
-                    "\nDaily Rambam 3 Chapters: ",
-                    sefaria_obj["calendar_items"][6]["displayValue"]["en"],
-                    "\nHalakha Yomit: ",
-                    sefaria_obj["calendar_items"][8]["displayValue"]["en"],
-                )
-            )
+            event_string = f"""
+                    Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
+                    Haftarah: {sefaria_obj["calendar_items"][1]["displayValue"]["en"]}
+                    Daf Yomi: {sefaria_obj["calendar_items"][2]["displayValue"]["en"]}
+                    Mishnah Yomit: {sefaria_obj["calendar_items"][4]["displayValue"]["en"]}
+                    Daily Rambam 1 Chapter: {sefaria_obj["calendar_items"][5]["displayValue"]["en"]}
+                    Daily Rambam 3 Chapters: {sefaria_obj["calendar_items"][6]["displayValue"]["en"]}
+                    Halakha Yomit: {sefaria_obj["calendar_items"][8]["displayValue"]["en"]}
+                    """
         else:
-            event_string = "".join(
-                (
-                    "Holiday: ",
-                    date.holiday_description,
-                    "\nParsha: ",
-                    sefaria_obj["calendar_items"][0]["displayValue"]["en"],
-                    "\nHaftarah: ",
-                    sefaria_obj["calendar_items"][1]["displayValue"]["en"],
-                    "\nDaf Yomi: ",
-                    sefaria_obj["calendar_items"][2]["displayValue"]["en"],
-                    "\nMishnah Yomit: ",
-                    sefaria_obj["calendar_items"][4]["displayValue"]["en"],
-                    "\nDaily Rambam 1 Chapter: ",
-                    sefaria_obj["calendar_items"][5]["displayValue"]["en"],
-                    "\nDaily Rambam 3 Chapters: ",
-                    sefaria_obj["calendar_items"][6]["displayValue"]["en"],
-                    "\nHalakha Yomit: ",
-                    sefaria_obj["calendar_items"][8]["displayValue"]["en"],
-                )
-            )
+            event_string = f"""
+                    Holiday: {date.holiday_description}
+                    Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
+                    Haftarah: {sefaria_obj["calendar_items"][1]["displayValue"]["en"]}
+                    Daf Yomi: {sefaria_obj["calendar_items"][2]["displayValue"]["en"]}
+                    Mishnah Yomit: {sefaria_obj["calendar_items"][4]["displayValue"]["en"]}
+                    Daily Rambam 1 Chapter: {sefaria_obj["calendar_items"][5]["displayValue"]["en"]}
+                    Daily Rambam 3 Chapters: {sefaria_obj["calendar_items"][6]["displayValue"]["en"]}
+                    Halakha Yomit: {sefaria_obj["calendar_items"][8]["displayValue"]["en"]}
+                    """
         await create_embed(ctx, event_string)
 
     @commands.command(name="dateToHebrew")

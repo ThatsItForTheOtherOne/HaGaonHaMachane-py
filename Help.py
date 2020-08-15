@@ -38,9 +38,9 @@ class Help(commands.Cog):
                 inline=True,
                 value="Grabs text from Sefaria API."
                 "\n\n__Usage__"
-                "\n\n`!!text <work> <chapter>:<verse>`"
+                "\n\n`!!text <book> <chapter>:<verse>`"
                 "\n\nExample: `!!text Genesis 1:1`"
-                "\n\n`!!text <work> <chapter>:<first verse>-<last verse>`"
+                "\n\n`!!text <book> <chapter>:<first verse>-<last verse>`"
                 "\n\nExample: `!!text II Kings 2:1-7`",
             )
             embed.add_field(
@@ -48,9 +48,9 @@ class Help(commands.Cog):
                 inline=True,
                 value="Grabs text from Sefaria API and posts it in Hebrew."
                 "\n\n__Usage__"
-                "\n\n`!!hebrewText <work> <chapter>:<verse>`"
+                "\n\n`!!hebrewText <book> <chapter>:<verse>`"
                 "\n\nExample: `!!hebrewText Genesis 1:1`"
-                "\n\n`!!hebrewText <work> <chapter>:<first verse>-<last verse>`"
+                "\n\n`!!hebrewText <book> <chapter>:<first verse>-<last verse>`"
                 "\n\nExample: `!!hebrewText II Kings 2:1-7`",
             )
 
@@ -87,7 +87,9 @@ class Help(commands.Cog):
             embed.add_field(
                 name="setLocation",
                 inline=True,
-                value="Sets a location for zmanim.\n Latitude and Longitude assume N and E.\n timezones must follow tzdata [https://en.wikipedia.org/wiki/List_of_tz_database_time_zones] standards."
+                value="Sets a location for zmanim."
+                "\nLatitude/Longitude assume N/E."
+                "\nTimezones must be [tzdata](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) format."
                 "\n\n__Usage__"
                 "\n\n``!!setLocation <Latitude> <Longitude> <tzdata timezone> <diaspora true/false>``"
                 "\n\nExample: `!!setLocation 40.7128 -74.0060 America/New_York True`",
