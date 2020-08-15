@@ -67,7 +67,6 @@ class Text(commands.Cog):
         verse = re.sub(r"[^\S\r\n](?=[A-z])", "_", verse)
         if "-" in verse:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE).match(verse).groups()
-
             book = parsed_string[0]
             chapter = int(parsed_string[1])
             first_verse = int(parsed_string[2]) - 1
@@ -80,10 +79,9 @@ class Text(commands.Cog):
             await create_embed(ctx, md(verse_text))
         else:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)", re.IGNORECASE).match(verse).groups()
-
             book = parsed_string[0]
             chapter = int(parsed_string[1])
-            verse = int(parsed_string[2]) - 1
+            verse = int(parsed_string[2])
 
             api_url = f"{self.api_url}{book}.{chapter}.{verse}?context=0{self.get_translation(ctx, book)}"
             sefaria_obj = json.load(urlopen(api_url))
@@ -95,7 +93,6 @@ class Text(commands.Cog):
         verse = re.sub(r"[^\S\r\n](?=[A-z])", "_", verse)
         if "-" in verse:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE).match(verse).groups()
-
             book = parsed_string[0]
             chapter = int(parsed_string[1])
             first_verse = int(parsed_string[2]) - 1
@@ -108,10 +105,9 @@ class Text(commands.Cog):
             await create_embed(ctx, md(verse_text))
         else:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)", re.IGNORECASE).match(verse).groups()
-
             book = parsed_string[0]
             chapter = int(parsed_string[1])
-            verse = int(parsed_string[2]) - 1
+            verse = int(parsed_string[2])
 
             api_url = f"{self.api_url}{book}.{chapter}.{verse}?context=0"
             sefaria_obj = json.load(urlopen(api_url))
