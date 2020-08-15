@@ -1,11 +1,11 @@
 import discord
 from discord.ext import commands, tasks
 from aiohttp import ClientSession
-from sendText import createEmbed
+from sendText import create_embed
 
 
 async def send_depcrecated_message(self, ctx):
-    await createEmbed(
+    await create_embed(
         ctx,
         "These Commands are now deprecated. Use "
         + self.bot.command_prefix
