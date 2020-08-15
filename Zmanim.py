@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands, tasks
 from aiohttp import ClientSession
 import sqlite3
-from sendText import createEmbed
+from sendText import create_embed
 import hdate
 import datetime
 
@@ -15,7 +15,7 @@ class Zmanim(commands.Cog):
     @commands.command(name="setLocation")
     async def setLocation(self, ctx, latitude, longtiude, timezone, diaspora):
         if ctx.channel.type is not discord.ChannelType.private:
-            await createEmbed(ctx, "This command is only for DMs!")
+            await create_embed(ctx, "This command is only for DMs!")
         else:
             db = sqlite3.connect("haGaon.db")
             cursor = db.cursor()
@@ -33,7 +33,7 @@ class Zmanim(commands.Cog):
             db.commit()
             cursor.close()
             db.close()
-            await createEmbed(ctx, "Location Set and Saved!")
+            await create_embed(ctx, "Location Set and Saved!")
 
     @commands.command(name="zmanim")
     async def getZmanim(self, ctx):
@@ -42,7 +42,7 @@ class Zmanim(commands.Cog):
         cursor.execute(f"SELECT * FROM main WHERE user_id = {ctx.message.author.id}")
         result = cursor.fetchone()
         if result is None:
-            await createEmbed(ctx, "Run setLocation first!!")
+            await create_embed(ctx, "Run setLocation first!!")
         elif result is not None:
             dias = result[4] == "True"
             location = hdate.Location(
@@ -51,7 +51,7 @@ class Zmanim(commands.Cog):
                 timezone=result[3],
                 diaspora=dias,
             )
-            await createEmbed(ctx, str(hdate.Zmanim(location=location, hebrew=False)))
+            await create_embed(ctx, str(hdate.Zmanim(location=location, hebrew=False)))
 
 
 def setup(bot):

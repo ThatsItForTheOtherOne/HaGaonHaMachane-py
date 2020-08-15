@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands, tasks
 from aiohttp import ClientSession
-from sendText import createEmbed
+from sendText import create_embed
 import datetime
 import hdate
 import json
@@ -17,14 +17,14 @@ class HebrewDate(commands.Cog):
     @commands.command(name="hebrewDate")
     async def hebrew_date(self, ctx):
         date = hdate.HDate(datetime.datetime.now(), hebrew=False)
-        await createEmbed(ctx, date.hebrew_date)
+        await create_embed(ctx, date.hebrew_date)
 
     @commands.command(name="eventsToday")
     async def events_today(self, ctx):
         date = hdate.HDate(datetime.datetime.now(), hebrew=False)
         sefaria_obj = json.load(urlopen(self.api_url))
         if date.is_holiday == False and 0 < date.omer_day < 50:
-            eventStr = "".join(
+            event_string = "".join(
                 (
                     "Parsha: ",
                     sefaria_obj["calendar_items"][0]["displayValue"]["en"],
@@ -45,7 +45,7 @@ class HebrewDate(commands.Cog):
                 )
             )
         elif date.is_holiday == False:
-            eventStr = "".join(
+            event_string = "".join(
                 (
                     "Parsha: ",
                     sefaria_obj["calendar_items"][0]["displayValue"]["en"],
@@ -64,7 +64,7 @@ class HebrewDate(commands.Cog):
                 )
             )
         else:
-            eventStr = "".join(
+            event_string = "".join(
                 (
                     "Holiday: ",
                     date.holiday_description,
@@ -84,13 +84,13 @@ class HebrewDate(commands.Cog):
                     sefaria_obj["calendar_items"][8]["displayValue"]["en"],
                 )
             )
-        await createEmbed(ctx, eventStr)
+        await create_embed(ctx, event_string)
 
     @commands.command(name="dateToHebrew")
     async def date_to_hebrew(self, ctx, year, month, day):
-        gregorianDate = datetime.datetime(int(year), int(month), int(day))
-        date = hdate.HDate(gregorianDate, hebrew=False)
-        await createEmbed(ctx, date.hebrew_date)
+        gregorian_date = datetime.datetime(int(year), int(month), int(day))
+        date = hdate.HDate(gregorian_date, hebrew=False)
+        await create_embed(ctx, date.hebrew_date)
 
 
 def setup(bot):

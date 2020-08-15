@@ -12,7 +12,7 @@ class Status(commands.Cog):
         self.bot = bot
         self.session = ClientSession(loop=bot.loop)
         self.api_url = "https://www.sefaria.org/api/calendars"
-        self.changeStatus.start()
+        self.change_status.start()
 
     async def current_hebrew_date(self):
         date = hdate.HDate(datetime.datetime.now(), hebrew=False)
