@@ -67,15 +67,25 @@ class Text(commands.Cog):
         verse = re.sub(r"[^\S\r\n](?=[A-z])", "_", verse)
         if "-" in verse:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE).match(verse).groups()
-            api_url = f"{self.api_url}{parsed_string[0]}.{parsed_string[1]}.{parsed_string[2]}?{self.get_translation(ctx, parsed_string[0])}"
+
+            book = parsed_string[0]
+            chapter = int(parsed_string[1])
+            first_verse = int(parsed_string[2]) - 1
+            final_verse = int(parsed_string[3])
+
+            api_url = f"{self.api_url}{book}.{chapter}.{first_verse}?{self.get_translation(ctx, book)}"
             sefaria_obj = json.load(urlopen(api_url))
-            verse_text = ""
-            for x in range(int(parsed_string[2]) - 1, int(parsed_string[3])):
-                verse_text = verse_text + " " + sefaria_obj["text"][x]
+            verses_list = sefaria_obj["text"][first_verse:final_verse]
+            verse_text = " ".join(verses_list)
             await create_embed(ctx, md(verse_text))
         else:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)", re.IGNORECASE).match(verse).groups()
-            api_url = f"{self.api_url}{parsed_string[0]}.{parsed_string[1]}.{parsed_string[2]}?context=0{self.get_translation(ctx, parsed_string[0])}"
+
+            book = parsed_string[0]
+            chapter = int(parsed_string[1])
+            verse = int(parsed_string[2]) - 1
+
+            api_url = f"{self.api_url}{book}.{chapter}.{verse}?context=0{self.get_translation(ctx, book)}"
             sefaria_obj = json.load(urlopen(api_url))
             await create_embed(ctx, md(sefaria_obj["text"]))
 
@@ -85,15 +95,25 @@ class Text(commands.Cog):
         verse = re.sub(r"[^\S\r\n](?=[A-z])", "_", verse)
         if "-" in verse:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE).match(verse).groups()
-            api_url = f"{self.api_url}{parsed_string[0]}.{parsed_string[1]}.{parsed_string[2]}"
+
+            book = parsed_string[0]
+            chapter = int(parsed_string[1])
+            first_verse = int(parsed_string[2]) - 1
+            final_verse = int(parsed_string[3])
+
+            api_url = f"{self.api_url}{book}.{chapter}.{first_verse}"
             sefaria_obj = json.load(urlopen(api_url))
-            verse_text = ""
-            for x in range(int(parsed_string[2]) - 1, int(parsed_string[3])):
-                verse_text = verse_text + " " + sefaria_obj["he"][x]
+            verses_list = sefaria_obj["he"][first_verse:final_verse]
+            verse_text = " ".join(verses_list)
             await create_embed(ctx, md(verse_text))
         else:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)", re.IGNORECASE).match(verse).groups()
-            api_url = f"{self.api_url}{parsed_string[0]}.{parsed_string[1]}.{parsed_string[2]}?context=0"
+
+            book = parsed_string[0]
+            chapter = int(parsed_string[1])
+            verse = int(parsed_string[2]) - 1
+
+            api_url = f"{self.api_url}{book}.{chapter}.{verse}?context=0"
             sefaria_obj = json.load(urlopen(api_url))
             await create_embed(ctx, md(sefaria_obj["he"]))
 
