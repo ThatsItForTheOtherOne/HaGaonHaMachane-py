@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands, tasks
 from aiohttp import ClientSession
 import sqlite3
-from sendText import create_embed
+from SendText import create_embed
 import hdate
 import datetime
 
@@ -19,12 +19,12 @@ class Zmanim(commands.Cog):
         else:
             db = sqlite3.connect("haGaon.db")
             cursor = db.cursor()
-            cursor.execute(
-                f"SELECT user_id FROM main WHERE user_id = {ctx.message.author.id}"
-            )
+            cursor.execute(f"SELECT user_id FROM main WHERE user_id = {ctx.message.author.id}")
             result = cursor.fetchone()
             if result is None:
-                sql = "INSERT INTO main(user_id, latitude, longitude, timezone, diaspora) VALUES(?, ?, ?, ?, ?)"
+                sql = (
+                    "INSERT INTO main(user_id, latitude, longitude, timezone, diaspora) VALUES(?, ?, ?, ?, ?)"
+                )
                 val = (ctx.message.author.id, latitude, longtiude, timezone, diaspora)
             elif result is not None:
                 sql = "UPDATE main SET latitude = ?, longitude  = ?, timezone = ?, diaspora = ? WHERE user_id = ?"
@@ -46,10 +46,7 @@ class Zmanim(commands.Cog):
         elif result is not None:
             dias = result[4] == "True"
             location = hdate.Location(
-                longitude=float(result[2]),
-                latitude=float(result[1]),
-                timezone=result[3],
-                diaspora=dias,
+                longitude=float(result[2]), latitude=float(result[1]), timezone=result[3], diaspora=dias,
             )
             await create_embed(ctx, str(hdate.Zmanim(location=location, hebrew=False)))
 

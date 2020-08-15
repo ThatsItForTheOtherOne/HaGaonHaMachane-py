@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from aiohttp import ClientSession
-from sendText import create_embed
+from SendText import create_embed
 
 
 class Help(commands.Cog):
@@ -17,13 +17,9 @@ class Help(commands.Cog):
             embed = discord.Embed(
                 title="Help",
                 color=0x0000FF,
-                description="**Type "
-                + self.bot.command_prefix
-                + "help <category>**, e.g. `!!help text`",
+                description="**Type " + self.bot.command_prefix + "help <category>**, e.g. `!!help text`",
             )
-            embed.add_field(
-                name="Sections", value="\n• Text\n• Calendar\n", inline=False
-            )
+            embed.add_field(name="Sections", value="\n• Text\n• Calendar\n", inline=False)
             embed.add_field(
                 name="Help",
                 value="• Code: https://github.com/Acher224/HaGaonHaMachane-py\n •Invite: TEMPORARILY REMOVED (DM for reason)",

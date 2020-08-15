@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands, tasks
 from aiohttp import ClientSession
-from sendText import create_embed
+from SendText import create_embed
 
 
 async def send_depcrecated_message(self, ctx):
