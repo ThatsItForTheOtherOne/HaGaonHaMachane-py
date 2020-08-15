@@ -21,7 +21,7 @@ class HebrewDate(commands.Cog):
 
     @commands.command(name="eventsToday")
     async def events_today(self, ctx):
-        date = hdate.HDate(datetime.datetime(2020, 4, 13), hebrew=False)
+        date = hdate.HDate(datetime.datetime.now(), hebrew=False)
         sefaria_obj = json.load(urlopen(self.api_url))
         if date.is_holiday == False and 0 < date.omer_day < 50:
             event_string = f"""
