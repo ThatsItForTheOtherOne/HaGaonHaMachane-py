@@ -24,10 +24,14 @@ class Status(commands.Cog):
                     | Today's Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
                     | Today's Haftarah: {sefaria_obj["calendar_items"][1]["displayValue"]["en"]}
                     """
-        print(len(status_string))
-        game = discord.Game(
-            
-        )
+        if len(status_string) > 128:
+                    status_string = f"""
+                    {date.hebrew_date}
+                    | {self.bot.command_prefix}help
+                    | Today's Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
+                    """
+        print(f"The status string is {len(status_string)} chars")
+        game = discord.Game(status_string)
         await self.bot.change_presence(status=discord.Status.online, activity=game)
 
 
