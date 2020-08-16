@@ -18,13 +18,15 @@ class Status(commands.Cog):
     async def change_status(self):
         sefaria_obj = json.load(urlopen(self.api_url))
         date = hdate.HDate(datetime.datetime.now(), hebrew=False)
-        game = discord.Game(
-            f"""
+        status_string = f"""
                     {date.hebrew_date}
                     | {self.bot.command_prefix}help
                     | Today's Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
                     | Today's Haftarah: {sefaria_obj["calendar_items"][1]["displayValue"]["en"]}
                     """
+        print(len(status_string))
+        game = discord.Game(
+            
         )
         await self.bot.change_presence(status=discord.Status.online, activity=game)
 
