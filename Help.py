@@ -53,6 +53,18 @@ class Help(commands.Cog):
                 "\n\n`!!hebrewText <book> <chapter>:<first verse>-<last verse>`"
                 "\n\nExample: `!!hebrewText II Kings 2:1-7`",
             )
+            embed.add_field(
+                name="setTranslation",
+                inline=True,
+                value="Set the translation for a specific book."
+                "\n **The book and translation must be surrounded with single quotes!**"
+                "\n To reset to default translation, run the command with the translation name blank."
+                "\n Names must be copied from Sefaria perfectly or it will fail."
+                "\n\n__Usage__"
+                "\n\n`!!setTranslation '<book>' '<translation>'`"
+                "\n\nExample: `!!setTranslation 'Genesis' 'Tanakh: The Holy Scriptures, published by JPS'`"
+                "\n\nExample: `!!setTranslation 'Genesis' ''`",
+            )
 
             embed.set_footer(
                 text=self.bot.description,

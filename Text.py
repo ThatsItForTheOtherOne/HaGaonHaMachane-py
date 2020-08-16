@@ -16,50 +16,52 @@ class Text(commands.Cog):
         self.api_url = "https://www.sefaria.org/api/texts/"
 
     def get_translation(self, ctx, book):
-        if book in [
-            "Genesis",
-            "Exodus",
-            "Leviticus",
-            "Numbers",
-            "Deteronomy",
-            "Amos",
-            "Ezekiel",
-            "Habakkuk",
-            "Haggai",
-            "Hosea",
-            "I_Kings",
-            "I_Samuel",
-            "II_Kings",
-            "II_Samuel",
-            "Isaiah",
-            "Jeremiah",
-            "Joel",
-            "Jonah",
-            "Joshua",
-            "Judges",
-            "Malachi",
-            "Micah",
-            "Nahum",
-            "Obadiah",
-            "Zechariah",
-            "Zephaniah",
-            "Daniel",
-            "Ecclesiastes",
-            "Esther",
-            "Ezra",
-            "I_Chronicles",
-            "II_Chronicles",
-            "Job",
-            "Lamentations",
-            "Nehemiah",
-            "Proverbs",
-            "Psalms",
-            "Ruth",
-            "Song of Songs",
-        ]:
-            return "&ven=The_Koren_Jerusalem_Bible"
+        db = sqlite3.connect("haGaon.db")
+        book = book.replace("_", " ")
+        cursor = db.cursor()
+        cursor.execute(
+            """SELECT translation FROM translation WHERE work = ? AND user_id = ?""",
+            (book, ctx.message.author.id),
+        )
+        result = cursor.fetchone()
+        if result is None or result[0] is None or result[0] == "":
+            cursor.execute("""SELECT translation FROM default_translation WHERE work = ?""", (book,))
+            result = cursor.fetchone()
+        if result is None or result[0] is None or result[0] == "":
+            return "&ven="
+        translation = result[0].replace(" ", "_")
+        cursor.close()
+        db.close()
+        return f"&ven={translation}"
+
+    @commands.command(name="setTranslation")
+    async def set_translation(self, ctx, *string):
+        string = " ".join(string)
+        try:
+            parsed_string = re.compile(r"(\'.*?\')\s(\'.*?\')").match(string).groups()
+        except:
+            await create_embed(ctx, f"Invalid parameters! Check {self.bot.command_prefix}help for usage!")
+            return
+        book = parsed_string[0].replace("'", "")
+        translation = parsed_string[1].replace("'", "")
+        db = sqlite3.connect("haGaon.db")
+        cursor = db.cursor()
+        cursor.execute(f"SELECT user_id FROM translation WHERE user_id = {ctx.message.author.id}")
+        result = cursor.fetchone()
+        if result is None:
+            sql = "INSERT INTO translation(user_id, work, translation) VALUES(?, ?, ?)"
+            val = (ctx.message.author.id, book, translation)
+        elif result is not None:
+            sql = "UPDATE translation SET work = ?, translation = ? WHERE user_id = ?"
+            val = (book, translation, ctx.message.author.id)
+        cursor.execute(sql, val)
+        db.commit()
+        cursor.close()
+        db.close()
+        if translation == "":
+            await create_embed(ctx, f"Translation for {book} set to default successfully!")
         else:
-            return ""
+            await create_embed(ctx, f"Translation for {book} set to {translation} successfully!")
 
     @commands.command(name="text")
     async def text_command(self, ctx, *verse):
@@ -68,23 +70,33 @@ class Text(commands.Cog):
         if "-" in verse:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE).match(verse).groups()
             book = parsed_string[0]
-            chapter = int(parsed_string[1])
-            first_verse = int(parsed_string[2]) - 1
+            chapter = parsed_string[1]
+            first_verse = int(parsed_string[2])
             final_verse = int(parsed_string[3])
 
             api_url = f"{self.api_url}{book}.{chapter}.{first_verse}?{self.get_translation(ctx, book)}"
             sefaria_obj = json.load(urlopen(api_url))
-            verses_list = sefaria_obj["text"][first_verse:final_verse]
+            verses_list = sefaria_obj["text"][first_verse - 1 : final_verse]
             verse_text = " ".join(verses_list)
+            if verse_text is "":
+                await create_embed(
+                    ctx, "There is no translation for this verse (or your translation setting is invalid)."
+                )
+                return
             await create_embed(ctx, md(verse_text))
         else:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)", re.IGNORECASE).match(verse).groups()
             book = parsed_string[0]
-            chapter = int(parsed_string[1])
+            chapter = parsed_string[1]
             verse = int(parsed_string[2])
 
             api_url = f"{self.api_url}{book}.{chapter}.{verse}?context=0{self.get_translation(ctx, book)}"
             sefaria_obj = json.load(urlopen(api_url))
+            if sefaria_obj["text"] is "":
+                await create_embed(
+                    ctx, "There is no translation for this verse (or your translation setting is invalid)."
+                )
+                return
             await create_embed(ctx, md(sefaria_obj["text"]))
 
     @commands.command(name="hebrewText")
@@ -94,19 +106,19 @@ class Text(commands.Cog):
         if "-" in verse:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE).match(verse).groups()
             book = parsed_string[0]
-            chapter = int(parsed_string[1])
+            chapter = parsed_string[1]
             first_verse = int(parsed_string[2]) - 1
             final_verse = int(parsed_string[3])
 
             api_url = f"{self.api_url}{book}.{chapter}.{first_verse}"
             sefaria_obj = json.load(urlopen(api_url))
-            verses_list = sefaria_obj["he"][first_verse:final_verse]
+            verses_list = sefaria_obj["text"][first_verse - 1 : final_verse]
             verse_text = " ".join(verses_list)
             await create_embed(ctx, md(verse_text))
         else:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)", re.IGNORECASE).match(verse).groups()
             book = parsed_string[0]
-            chapter = int(parsed_string[1])
+            chapter = parsed_string[1]
             verse = int(parsed_string[2])
 
             api_url = f"{self.api_url}{book}.{chapter}.{verse}?context=0"
