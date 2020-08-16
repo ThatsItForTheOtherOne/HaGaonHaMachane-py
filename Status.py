@@ -14,17 +14,14 @@ class Status(commands.Cog):
         self.api_url = "https://www.sefaria.org/api/calendars"
         self.change_status.start()
 
-    async def current_hebrew_date(self):
-        date = hdate.HDate(datetime.datetime.now(), hebrew=False)
-        return date.hebrew_date
-
     @tasks.loop(hours=1)
     async def change_status(self):
         sefaria_obj = json.load(urlopen(self.api_url))
+        date = hdate.HDate(datetime.datetime.now(), hebrew=False)
         game = discord.Game(
             f"""
-                    {self.bot.command_prefix}help
-                    | The date is {await self.current_hebrew_date()} 
+                    {date.hebrew_date}
+                    | {self.bot.command_prefix}help
                     | Today's Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
                     | Today's Haftarah: {sefaria_obj["calendar_items"][1]["displayValue"]["en"]}
                     """
