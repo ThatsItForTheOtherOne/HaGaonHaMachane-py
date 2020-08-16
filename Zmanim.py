@@ -49,6 +49,8 @@ class Zmanim(commands.Cog):
                 longitude=float(result[2]), latitude=float(result[1]), timezone=result[3], diaspora=dias,
             )
             await create_embed(ctx, str(hdate.Zmanim(location=location, hebrew=False)))
+        cursor.close()
+        db.close()
 
 
 def setup(bot):
