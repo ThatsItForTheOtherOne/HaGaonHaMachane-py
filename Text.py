@@ -15,11 +15,6 @@ class Text(commands.Cog):
         self.session = ClientSession(loop=bot.loop)
         self.api_url = "https://www.sefaria.org/api/texts/"
 
-    def replace_spaces_with_underscores(self, string):
-        while string.count(" ") != 1:
-            string = re.sub(" ", "_", string, count=1)
-        return string
-
     def get_translation(self, ctx, book):
         db = sqlite3.connect("haGaon.db")
         book = book.replace("_", " ")
@@ -71,7 +66,7 @@ class Text(commands.Cog):
     @commands.command(name="text")
     async def text_command(self, ctx, *verse):
         verse = " ".join(verse)
-        verse = self.replace_spaces_with_underscores(verse)
+        verse = re.sub(r"[^\S\r\n](?=[A-z])", "_", verse)
         if "-" in verse:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE).match(verse).groups()
             book = parsed_string[0]
@@ -89,7 +84,7 @@ class Text(commands.Cog):
                 )
                 return
             await create_embed(ctx, md(verse_text))
-        elif ":" in verse:
+        else:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)", re.IGNORECASE).match(verse).groups()
             book = parsed_string[0]
             chapter = parsed_string[1]
@@ -103,24 +98,11 @@ class Text(commands.Cog):
                 )
                 return
             await create_embed(ctx, md(sefaria_obj["text"]))
-        else:
-            parsed_string = re.compile(r"(\S+)\s(\S+)", re.IGNORECASE).match(verse).groups()
-            book = parsed_string[0]
-            verse = int(parsed_string[1])
-
-            api_url = f"{self.api_url}{book}.{verse}?context=0{self.get_translation(ctx, book)}"
-            sefaria_obj = json.load(urlopen(api_url))
-            if sefaria_obj["text"] is "":
-                await create_embed(
-                    ctx, "There is no translation for this verse (or your translation setting is invalid)."
-                )
-                return
-            await create_embed(ctx, md(sefaria_obj["text"]))
 
     @commands.command(name="hebrewText")
     async def hebrew_text_command(self, ctx, *verse):
         verse = " ".join(verse)
-        verse = self.replace_spaces_with_underscores(verse)
+        verse = re.sub(r"[^\S\r\n](?=[A-z])", "_", verse)
         if "-" in verse:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE).match(verse).groups()
             book = parsed_string[0]
@@ -130,24 +112,16 @@ class Text(commands.Cog):
 
             api_url = f"{self.api_url}{book}.{chapter}.{first_verse}"
             sefaria_obj = json.load(urlopen(api_url))
-            verses_list = sefaria_obj["he"][first_verse - 1 : final_verse]
+            verses_list = sefaria_obj["text"][first_verse - 1 : final_verse]
             verse_text = " ".join(verses_list)
             await create_embed(ctx, md(verse_text))
-        elif ":" in verse:
+        else:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)", re.IGNORECASE).match(verse).groups()
             book = parsed_string[0]
             chapter = parsed_string[1]
             verse = int(parsed_string[2])
 
             api_url = f"{self.api_url}{book}.{chapter}.{verse}?context=0"
-            sefaria_obj = json.load(urlopen(api_url))
-            await create_embed(ctx, md(sefaria_obj["he"]))
-        else:
-            parsed_string = re.compile(r"(\S+)\s(\S+)", re.IGNORECASE).match(verse).groups()
-            book = parsed_string[0]
-            verse = int(parsed_string[1])
-
-            api_url = f"{self.api_url}{book}.{verse}?context=0"
             sefaria_obj = json.load(urlopen(api_url))
             await create_embed(ctx, md(sefaria_obj["he"]))
 
