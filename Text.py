@@ -2,11 +2,11 @@ import discord
 from discord.ext import commands
 import json
 from urllib.request import urlopen
-import re
 from SendText import create_embed
 from aiohttp import ClientSession
 from markdownify import markdownify as md
 import sqlite3
+import re
 
 
 class Text(commands.Cog):
@@ -16,7 +16,7 @@ class Text(commands.Cog):
         self.api_url = "https://www.sefaria.org/api/texts/"
 
     def replace_spaces_with_underscores(self, string):
-        while string.count(" ") != 1:
+        while string.count(" ") != 0 and string.count(" ") != 1:
             string = re.sub(" ", "_", string, count=1)
         return string
 
