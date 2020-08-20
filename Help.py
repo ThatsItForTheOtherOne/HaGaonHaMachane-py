@@ -8,6 +8,7 @@ class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.session = ClientSession(loop=bot.loop)
+        self.owner = str(bot.get_user(455504351872548885))
 
     @commands.command(name="help")
     async def help_command(self, ctx, *, command: str = "help"):
@@ -22,7 +23,7 @@ class Help(commands.Cog):
             embed.add_field(name="Sections", value="\n• Text\n• Calendar\n", inline=False)
             embed.add_field(
                 name="Help",
-                value="• Code: https://github.com/Acher224/HaGaonHaMachane-py\n •Invite: TEMPORARILY REMOVED (DM for reason)",
+                value=f"•Code: https://github.com/Acher224/HaGaonHaMachane-py\n •Invite: TEMPORARILY REMOVED\n •Owner: {self.owner}",
                 inline=False,
             )
             embed.set_footer(
