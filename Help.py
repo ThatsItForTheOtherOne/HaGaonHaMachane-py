@@ -23,7 +23,7 @@ class Help(commands.Cog):
             embed.add_field(name="Sections", value="\n• Text\n• Calendar\n", inline=False)
             embed.add_field(
                 name="Help",
-                value=f"•Code: https://github.com/Acher224/HaGaonHaMachane-py\n •Invite: TEMPORARILY REMOVED\n •Owner: {self.owner}",
+                value=f"•Code: https://github.com/Acher224/HaGaonHaMachane-py\n •Invite: https://discord.com/oauth2/authorize?client_id=466676353907818516&scope=bot&permissions=68608\n •Owner: {self.owner}",
                 inline=False,
             )
             embed.set_footer(
