@@ -125,7 +125,7 @@ class Text(commands.Cog):
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE).match(verse).groups()
             book = parsed_string[0]
             chapter = parsed_string[1]
-            first_verse = int(parsed_string[2]) - 1
+            first_verse = int(parsed_string[2])
             final_verse = int(parsed_string[3])
 
             api_url = f"{self.api_url}{book}.{chapter}.{first_verse}"
