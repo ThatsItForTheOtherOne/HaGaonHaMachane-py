@@ -19,6 +19,7 @@ Shoutout
 * Sefaria
 * Hebcal
 * [Bio-ico](https://github.com/Bio-ico)
+* [Jan Pontaoski](https://github.com/pontaoski)
 
 Commands
 --------
