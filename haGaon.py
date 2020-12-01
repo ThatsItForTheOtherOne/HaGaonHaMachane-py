@@ -3,7 +3,7 @@ from discord.ext import commands
 import os.path
 import aiosqlite
 
-bot = commands.Bot(command_prefix="!!", description="HaGaon HaMachane Version 3.0")
+bot = commands.Bot(command_prefix="!!", description="HaGaon HaMachane Version 5.0")
 bot.remove_command("help")
 
 
