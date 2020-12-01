@@ -6,7 +6,7 @@ from urllib.request import urlopen
 from sendText import create_embed
 from aiohttp import ClientSession
 from markdownify import markdownify as md
-import sqlite3
+import aiosqlite
 import re
 from typing import List, Tuple
 
@@ -21,23 +21,23 @@ class Text(commands.Cog):
             string = re.sub(" ", "_", string, count=1)
         return string
 
-    def get_translation(self, ctx, book):
-        db = sqlite3.connect("haGaon.db")
+    async def get_translation(self, ctx, book):
+        db = await aiosqlite.connect("haGaon.db")
         book = book.replace("_", " ")
-        cursor = db.cursor()
-        cursor.execute(
+        cursor = await db.cursor()
+        await cursor.execute(
             """SELECT translation FROM translation WHERE work = ? AND user_id = ?""",
             (book, ctx.message.author.id),
         )
-        result = cursor.fetchone()
+        result = await cursor.fetchone()
         if result is None or result[0] is None or result[0] == "":
-            cursor.execute("""SELECT translation FROM default_translation WHERE work = ?""", (book,))
-            result = cursor.fetchone()
+            await cursor.execute("""SELECT translation FROM default_translation WHERE work = ?""", (book,))
+            result = await cursor.fetchone()
         if result is None or result[0] is None or result[0] == "":
             return "&ven="
         translation = result[0].replace(" ", "_")
-        cursor.close()
-        db.close()
+        await cursor.close()
+        await db.close()
         return f"&ven={translation}"
 
     @commands.command(name="setTranslation")
@@ -50,20 +50,20 @@ class Text(commands.Cog):
             return
         book = parsed_string[0].replace("'", "")
         translation = parsed_string[1].replace("'", "")
-        db = sqlite3.connect("haGaon.db")
-        cursor = db.cursor()
-        cursor.execute(f"SELECT user_id FROM translation WHERE user_id = {ctx.message.author.id}")
-        result = cursor.fetchone()
+        db = await aiosqlite.connect("haGaon.db")
+        cursor = await db.cursor()
+        await cursor.execute(f"SELECT user_id FROM translation WHERE user_id = {ctx.message.author.id}")
+        result = await cursor.fetchone()
         if result is None:
             sql = "INSERT INTO translation(user_id, work, translation) VALUES(?, ?, ?)"
             val = (ctx.message.author.id, book, translation)
         elif result is not None:
             sql = "UPDATE translation SET work = ?, translation = ? WHERE user_id = ?"
             val = (book, translation, ctx.message.author.id)
-        cursor.execute(sql, val)
-        db.commit()
-        cursor.close()
-        db.close()
+        await cursor.execute(sql, val)
+        await db.commit()
+        await cursor.close()
+        await db.close()
         if translation == "":
             await create_embed(ctx, f"Translation for {book} set to default successfully!")
         else:
@@ -71,8 +71,8 @@ class Text(commands.Cog):
 
     @commands.command(name="text")
     async def text_command(self, ctx, *verse):
-        def parse_verse(verse: str) -> str:
-            def parse_verses(verse: str) -> Tuple[str, str]:
+        async def parse_verse(verse: str) -> str:
+            async def parse_verses(verse: str) -> Tuple[str, str]:
                 if "-" in verse:
                     book, chapter, first, final = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE).match(verse).groups()
                     return (f"{book}.{chapter}.{first}-{final}", book)
@@ -85,11 +85,11 @@ class Text(commands.Cog):
                     book, verse = re.compile(r"(\S+)\s(\S+)", re.IGNORECASE).match(verse).groups()
                     return (f"{book}.{verse}", book)
 
-            url, book = parse_verses(verse)
-            return f"{self.api_url}{url}?context=0{self.get_translation(ctx, book)}"
+            url, book = await parse_verses(verse)
+            return f"{self.api_url}{url}?context=0{await self.get_translation(ctx, book)}"
 
         async with aiohttp.ClientSession() as session:
-            async with session.get(parse_verse(self.replace_spaces_with_underscores(" ".join(verse)))) as response:
+            async with session.get(await parse_verse(self.replace_spaces_with_underscores(" ".join(verse)))) as response:
                 body = await response.text()
 
                 if response.status == 404:

@@ -1,11 +1,12 @@
 import discord
 from discord.ext import commands, tasks
 from aiohttp import ClientSession
-from SendText import create_embed
+from sendText import create_embed
 import datetime
 import hdate
 import json
 from urllib.request import urlopen
+import aiohttp
 
 
 class HebrewDate(commands.Cog):
@@ -22,9 +23,12 @@ class HebrewDate(commands.Cog):
     @commands.command(name="eventsToday")
     async def events_today(self, ctx):
         date = hdate.HDate(datetime.datetime.now(), hebrew=False)
-        sefaria_obj = json.load(urlopen(self.api_url))
-        if date.is_holiday == False and 0 < date.omer_day < 50:
-            event_string = f"""
+        async with aiohttp.ClientSession() as session:
+            async with session.get(self.api_url) as response:
+                body = await response.text()
+                sefaria_obj = json.loads(body)
+            if date.is_holiday == False and 0 < date.omer_day < 50:
+                event_string = f"""
                     Omer: {date.omer_day}
                     Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
                     Haftarah: {sefaria_obj["calendar_items"][1]["displayValue"]["en"]}
@@ -34,8 +38,8 @@ class HebrewDate(commands.Cog):
                     Daily Rambam 3 Chapters: {sefaria_obj["calendar_items"][6]["displayValue"]["en"]}
                     Halakha Yomit: {sefaria_obj["calendar_items"][8]["displayValue"]["en"]}
                     """
-        elif date.is_holiday == False:
-            event_string = f"""
+            elif date.is_holiday == False:
+                event_string = f"""
                     Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
                     Haftarah: {sefaria_obj["calendar_items"][1]["displayValue"]["en"]}
                     Daf Yomi: {sefaria_obj["calendar_items"][2]["displayValue"]["en"]}
@@ -44,8 +48,8 @@ class HebrewDate(commands.Cog):
                     Daily Rambam 3 Chapters: {sefaria_obj["calendar_items"][6]["displayValue"]["en"]}
                     Halakha Yomit: {sefaria_obj["calendar_items"][8]["displayValue"]["en"]}
                     """
-        else:
-            event_string = f"""
+            else:
+                event_string = f"""
                     Holiday: {date.holiday_description}
                     Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
                     Haftarah: {sefaria_obj["calendar_items"][1]["displayValue"]["en"]}
@@ -55,7 +59,7 @@ class HebrewDate(commands.Cog):
                     Daily Rambam 3 Chapters: {sefaria_obj["calendar_items"][6]["displayValue"]["en"]}
                     Halakha Yomit: {sefaria_obj["calendar_items"][8]["displayValue"]["en"]}
                     """
-        await create_embed(ctx, event_string)
+            await create_embed(ctx, event_string)
 
     @commands.command(name="dateToHebrew")
     async def date_to_hebrew(self, ctx, year, month, day):

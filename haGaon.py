@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 import os.path
-import sqlite3
+import aiosqlite
 
 bot = commands.Bot(command_prefix="!!", description="HaGaon HaMachane Version 3.0")
 bot.remove_command("help")
@@ -10,9 +10,9 @@ bot.remove_command("help")
 @bot.event
 async def on_ready():
     if not os.path.isfile("haGaon.db"):
-        db = sqlite3.connect("haGaon.db")
-        cursor = db.cursor()
-        cursor.execute(
+        db = await aiosqlite.connect("haGaon.db")
+        cursor = await db.cursor()
+        await cursor.execute(
             """
         CREATE TABLE IF NOT EXISTS main(
         user_id TEXT,
@@ -23,7 +23,7 @@ async def on_ready():
         )
         """
         )
-        cursor.execute(
+        await cursor.execute(
             """
         CREATE TABLE IF NOT EXISTS translation(
         user_id TEXT,
@@ -32,7 +32,7 @@ async def on_ready():
         )
         """
         )
-        cursor.execute(
+        await cursor.execute(
             """
         CREATE TABLE IF NOT EXISTS default_translation(
         work TEXT,
@@ -40,8 +40,8 @@ async def on_ready():
         )
         """
         )
-        cursor.close()
-        db.close()
+        await cursor.close()
+        await db.close()
     print(f"Logged in as {bot.user.name} ({bot.user.id}) on {len(bot.guilds)} servers")
 
     cog_list = ["Text", "HebrewDate", "Help", "Status", "Zmanim"]

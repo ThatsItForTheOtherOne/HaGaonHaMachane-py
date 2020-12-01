@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from aiohttp import ClientSession
-from SendText import create_embed
+from sendText import create_embed
 
 
 class Help(commands.Cog):
