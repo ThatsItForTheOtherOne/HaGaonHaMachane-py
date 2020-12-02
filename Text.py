@@ -16,7 +16,7 @@ class Text(commands.Cog):
         self.api_url = "https://www.sefaria.org/api/texts/"
     
     async def parse_sefaria_text(self, sefaria_text):
-        if "<i>" in sefaria_text and "</i>" in sefaria_text:
+        if not "<i></i>" in sefaria_text and "<i>" in sefaria_text and "</i>" in sefaria_text:
             sefaria_text = sefaria_text.replace("<i>", "*")
             sefaria_text = sefaria_text.replace("</i>", "*")
         else:
