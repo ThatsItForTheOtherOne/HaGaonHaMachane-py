@@ -16,13 +16,25 @@ class Text(commands.Cog):
         self.api_url = "https://www.sefaria.org/api/texts/"
     
     async def parse_sefaria_text(self, sefaria_text):
-        sefaria_text = sefaria_text.replace("<i>", "*")
-        sefaria_text = sefaria_text.replace("</i>", "*")
-        sefaria_text = sefaria_text.replace("<b>", "**")
-        sefaria_text = sefaria_text.replace("</b>", "**")
+        if "<i>" in sefaria_text and "</i>" in sefaria_text:
+            sefaria_text = sefaria_text.replace("<i>", "*")
+            sefaria_text = sefaria_text.replace("</i>", "*")
+        else:
+            sefaria_text = sefaria_text.replace("<i>", "")
+            sefaria_text = sefaria_text.replace("</i>", "")
+        if "<b>" in sefaria_text and "</b>" in sefaria_text:
+            sefaria_text = sefaria_text.replace("<b>", "**")
+            sefaria_text = sefaria_text.replace("</b>", "**")
+        else:
+            sefaria_text = sefaria_text.replace("<b>", "")
+            sefaria_text = sefaria_text.replace("</b>", "")
+        if "<strong>" in sefaria_text and "</strong>" in sefaria_text:
+            sefaria_text = sefaria_text.replace("<strong>", "***")
+            sefaria_text = sefaria_text.replace("</strong>", "***")
+        else:
+            sefaria_text = sefaria_text.replace("<strong>", "")
+            sefaria_text = sefaria_text.replace("</strong>", "")
         sefaria_text = sefaria_text.replace("<br>", "\n")
-        sefaria_text = sefaria_text.replace("<strong>", "***")
-        sefaria_text = sefaria_text.replace("</strong>", "***")
         return sefaria_text
         
     async def replace_spaces_with_underscores(self, string):
