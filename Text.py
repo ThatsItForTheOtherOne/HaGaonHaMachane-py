@@ -35,6 +35,8 @@ class Text(commands.Cog):
             sefaria_text = sefaria_text.replace("<strong>", "")
             sefaria_text = sefaria_text.replace("</strong>", "")
         sefaria_text = sefaria_text.replace("<br>", "\n")
+        sefaria_text = sefaria_text.replace("&lt;", "")
+        sefaria_text = sefaria_text.replace("&gt;", "")
         return sefaria_text
         
     async def replace_spaces_with_underscores(self, string):
