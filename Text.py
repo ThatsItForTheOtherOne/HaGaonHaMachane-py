@@ -5,7 +5,6 @@ import json
 from urllib.request import urlopen
 from sendText import create_embed
 from aiohttp import ClientSession
-from markdownify import markdownify as md
 import aiosqlite
 import re
 from typing import List, Tuple
@@ -15,8 +14,18 @@ class Text(commands.Cog):
         self.bot = bot
         self.session = ClientSession(loop=bot.loop)
         self.api_url = "https://www.sefaria.org/api/texts/"
-
-    def replace_spaces_with_underscores(self, string):
+    
+    async def parse_sefaria_text(self, sefaria_text):
+        sefaria_text = sefaria_text.replace("<i>", "*")
+        sefaria_text = sefaria_text.replace("</i>", "*")
+        sefaria_text = sefaria_text.replace("<b>", "**")
+        sefaria_text = sefaria_text.replace("</b>", "**")
+        sefaria_text = sefaria_text.replace("<br>", "\n")
+        sefaria_text = sefaria_text.replace("<strong>", "***")
+        sefaria_text = sefaria_text.replace("</strong>", "***")
+        return sefaria_text
+        
+    async def replace_spaces_with_underscores(self, string):
         while string.count(" ") != 0 and string.count(" ") != 1:
             string = re.sub(" ", "_", string, count=1)
         return string
@@ -89,7 +98,7 @@ class Text(commands.Cog):
             return f"{self.api_url}{url}?context=0{await self.get_translation(ctx, book)}"
 
         async with aiohttp.ClientSession() as session:
-            async with session.get(await parse_verse(self.replace_spaces_with_underscores(" ".join(verse)))) as response:
+            async with session.get(await parse_verse(await self.replace_spaces_with_underscores(" ".join(verse)))) as response:
                 body = await response.text()
 
                 if response.status == 404:
@@ -107,12 +116,12 @@ class Text(commands.Cog):
             await create_embed(ctx, f"The Sefaria API returned something that I don't understand ({typeof}). Please contact my administrator about this error.")
             return
 
-        await create_embed(ctx, md(verse_text))
+        await create_embed(ctx, await self.parse_sefaria_text(verse_text))
 
     @commands.command(name="hebrewText")
     async def hebrew_text_command(self, ctx, *verse):
         verse = " ".join(verse)
-        verse = self.replace_spaces_with_underscores(verse)
+        verse = await self.replace_spaces_with_underscores(verse)
         if "-" in verse:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE).match(verse).groups()
             book = parsed_string[0]
@@ -124,7 +133,7 @@ class Text(commands.Cog):
             sefaria_obj = json.load(urlopen(api_url))
             verses_list = sefaria_obj["he"][first_verse - 1 : final_verse]
             verse_text = " ".join(verses_list)
-            await create_embed(ctx, md(verse_text))
+            await create_embed(ctx, self.parse_sefaria_text(verse_text))
         elif ":" in verse:
             parsed_string = re.compile(r"(\S+)\s(\S+):(\d+)", re.IGNORECASE).match(verse).groups()
             book = parsed_string[0]
@@ -133,7 +142,7 @@ class Text(commands.Cog):
 
             api_url = f"{self.api_url}{book}.{chapter}.{verse}?context=0"
             sefaria_obj = json.load(urlopen(api_url))
-            await create_embed(ctx, md(sefaria_obj["he"]))
+            await create_embed(ctx, self.parse_sefaria_text(sefaria_obj["he"]))
         else:
             parsed_string = re.compile(r"(\S+)\s(\S+)", re.IGNORECASE).match(verse).groups()
             book = parsed_string[0]
@@ -141,7 +150,7 @@ class Text(commands.Cog):
 
             api_url = f"{self.api_url}{book}.{verse}?context=0"
             sefaria_obj = json.load(urlopen(api_url))
-            await create_embed(ctx, md(sefaria_obj["he"]))
+            await create_embed(ctx, self.parse_sefaria_text(sefaria_obj["he"]))
 
 
 def setup(bot):
