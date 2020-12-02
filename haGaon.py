@@ -8,6 +8,12 @@ bot.remove_command("help")
 
 
 @bot.event
+async def on_command_error(ctx, error):
+    if isinstance(error, commands.CommandNotFound):
+        await ctx.send(f"Command not found! Check {bot.command_prefix}help!")
+
+
+@bot.event
 async def on_ready():
     if not os.path.isfile("haGaon.db"):
         db = await aiosqlite.connect("haGaon.db")
