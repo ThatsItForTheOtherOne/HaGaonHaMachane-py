@@ -3,7 +3,7 @@ from discord.ext import commands
 import os.path
 import aiosqlite
 
-bot = commands.Bot(command_prefix="!!", description="HaGaon HaMachane Version 5.0")
+bot = commands.Bot(command_prefix="!!", description="HaGaon HaMachane Version 5.1")
 bot.remove_command("help")
 
 
@@ -11,6 +11,8 @@ bot.remove_command("help")
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         await ctx.send(f"Command not found! Check {bot.command_prefix}help!")
+    else:
+        print(error)
 
 
 @bot.event

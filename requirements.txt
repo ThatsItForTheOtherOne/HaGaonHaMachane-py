@@ -2,3 +2,5 @@ discord-py
 hdate
 markdownify
 aiosqlite
+geopy
+tzwhere

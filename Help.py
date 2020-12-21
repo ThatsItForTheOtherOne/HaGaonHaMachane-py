@@ -98,15 +98,26 @@ class Help(commands.Cog):
                 "\n\nExample: `!!dateToHebrew 2020 1 1`",
             )
             embed.add_field(
-                name="setLocation",
+                name="setLocationByCoordinates",
                 inline=True,
                 value="Sets a location for zmanim."
                 "\nLatitude/Longitude assume N/E."
                 "\nTimezones must be [tzdata](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) format."
                 "\n\n__Usage__"
-                "\n\n``!!setLocation <Latitude> <Longitude> <tzdata timezone> <diaspora true/false>``"
-                "\n\nExample: `!!setLocation 40.7128 -74.0060 America/New_York True`",
+                "\n\n``!!setLocationByCoordinates <Latitude> <Longitude> <tzdata timezone> <diaspora true/false>``"
+                "\n\nExample: `!!setLocationByCoordinates 40.7128 -74.0060 America/New_York True`",
             )
+            embed.add_field(
+                name="setLocationByAddress",
+                inline=True,
+                value="Sets a location for zmanim."
+                "\nAddress can be many different formats, but <Street>, <City>, <Country> works best"
+                "\nThis command is slow! It calculates IANA timezones using lat/long which is slow! Be patient!"
+                "\n\n__Usage__"
+                "\n\n``!!setLocationByAddress <Address>``"
+                "\n\nExample: `!!setLocationByAddress Nahalat Binyamin St 12, Tel Aviv-Yafo, Israel`",
+            )
+
             embed.add_field(
                 name="Zmanim",
                 inline=True,
