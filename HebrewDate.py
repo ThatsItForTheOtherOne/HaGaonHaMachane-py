@@ -14,21 +14,18 @@ class HebrewDate(commands.Cog):
         self.bot = bot
         self.session = ClientSession(loop=bot.loop)
         self.api_url = "https://www.sefaria.org/api/calendars"
+        self.events_str = ""
+        self.grab_new_events.start()
 
-    @commands.command(name="hebrewDate")
-    async def hebrew_date(self, ctx):
-        date = hdate.HDate(datetime.datetime.now(), hebrew=False)
-        await create_embed(ctx, date.hebrew_date)
-
-    @commands.command(name="eventsToday")
-    async def events_today(self, ctx):
+    @tasks.loop(hours=1)
+    async def grab_new_events(self):
         date = hdate.HDate(datetime.datetime.now(), hebrew=False)
         async with aiohttp.ClientSession() as session:
             async with session.get(self.api_url) as response:
                 body = await response.text()
                 sefaria_obj = json.loads(body)
             if date.is_holiday == False and 0 < date.omer_day < 50:
-                event_string = f"""
+                self.events_str = f"""
                     Omer: {date.omer_day}
                     Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
                     Haftarah: {sefaria_obj["calendar_items"][1]["displayValue"]["en"]}
@@ -39,7 +36,7 @@ class HebrewDate(commands.Cog):
                     Halakha Yomit: {sefaria_obj["calendar_items"][8]["displayValue"]["en"]}
                     """
             elif date.is_holiday == False:
-                event_string = f"""
+                self.events_str = f"""
                     Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
                     Haftarah: {sefaria_obj["calendar_items"][1]["displayValue"]["en"]}
                     Daf Yomi: {sefaria_obj["calendar_items"][2]["displayValue"]["en"]}
@@ -49,7 +46,7 @@ class HebrewDate(commands.Cog):
                     Halakha Yomit: {sefaria_obj["calendar_items"][8]["displayValue"]["en"]}
                     """
             else:
-                event_string = f"""
+                self.events_str = f"""
                     Holiday: {date.holiday_description}
                     Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
                     Haftarah: {sefaria_obj["calendar_items"][1]["displayValue"]["en"]}
@@ -59,7 +56,15 @@ class HebrewDate(commands.Cog):
                     Daily Rambam 3 Chapters: {sefaria_obj["calendar_items"][6]["displayValue"]["en"]}
                     Halakha Yomit: {sefaria_obj["calendar_items"][8]["displayValue"]["en"]}
                     """
-            await create_embed(ctx, event_string)
+
+    @commands.command(name="hebrewDate")
+    async def hebrew_date(self, ctx):
+        date = hdate.HDate(datetime.datetime.now(), hebrew=False)
+        await create_embed(ctx, date.hebrew_date)
+
+    @commands.command(name="events")
+    async def events_today(self, ctx):
+        await create_embed(ctx, self.events_str)
 
     @commands.command(name="dateToHebrew")
     async def date_to_hebrew(self, ctx, year, month, day):

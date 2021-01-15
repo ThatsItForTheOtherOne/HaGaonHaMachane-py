@@ -8,12 +8,11 @@ class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.session = ClientSession(loop=bot.loop)
-        self.owner = str(bot.get_user(455504351872548885))
+        self.owner = "Acher#0495"
 
     @commands.command(name="help")
     async def help_command(self, ctx, *, command: str = "help"):
         command = command.lower()
-
         if command == "help":
             embed = discord.Embed(
                 title="Help",
@@ -83,11 +82,11 @@ class Help(commands.Cog):
                 "\n\nExample: `!!hebrewDate`",
             )
             embed.add_field(
-                name="eventsToday",
+                name="events",
                 inline=True,
                 value="Prints daily event, including Omer count and holidays"
                 "\n\n__Usage__"
-                "\n\nExample: `!!eventsToday`",
+                "\n\nExample: `!!events`",
             )
             embed.add_field(
                 name="dateToHebrew",
