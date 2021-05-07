@@ -14,7 +14,6 @@ class Zmanim(commands.Cog):
         self.bot = bot
         self.session = ClientSession(loop=bot.loop)
 
-    @commands.command(name="setLocationByCoordinates")
     async def set_location_by_coordinates(self, ctx, latitude, longtiude, timezone, diaspora):
         if ctx.channel.type is not discord.ChannelType.private:
             await create_embed(ctx, "This command is only for DMs!")
@@ -39,7 +38,6 @@ class Zmanim(commands.Cog):
             await db.close()
             await create_embed(ctx, "Location Set and Saved!")
 
-    @commands.command(name="setLocationByAddress")
     async def set_location_by_address(self, ctx, *address):
         if ctx.channel.type is not discord.ChannelType.private:
             await create_embed(ctx, "This command is only for DMs!")
@@ -51,10 +49,9 @@ class Zmanim(commands.Cog):
             tzwhere_obj = tzwhere.tzwhere()
             timezone = tzwhere_obj.tzNameAt(location.latitude, location.longitude)
             if "Israel" in location.address:
-                diaspora = "True"
-            else:
                 diaspora = "False"
-            print(f"{timezone} {diaspora} {location.raw}")
+            else:
+                diaspora = "True"
             db = await aiosqlite.connect("haGaon.db")
             cursor = await db.cursor()
             sql = "SELECT user_id FROM main WHERE user_id = ?"
@@ -75,11 +72,10 @@ class Zmanim(commands.Cog):
             await db.close()
             await create_embed(ctx, "Location Set and Saved!")
 
-    @commands.command(name="zmanim")
-    async def getZmanim(self, ctx):
+    async def get_zmanim(self, ctx):
         db = await aiosqlite.connect("haGaon.db")
         cursor = await db.cursor()
-        sql = "SELECT user_id FROM main WHERE user_id = ?"
+        sql = "SELECT * FROM main WHERE user_id = ?"
         val = (ctx.message.author.id,)
         await cursor.execute(sql, val)
         result = await cursor.fetchone()
@@ -93,6 +89,18 @@ class Zmanim(commands.Cog):
             await create_embed(ctx, str(hdate.Zmanim(location=location, hebrew=False)))
         await cursor.close()
         await db.close()
+
+    @commands.command(name="setLocationByCoordinates")
+    async def self_loc_by_coords_command(self, ctx, latitude, longtiude, timezone, diaspora):
+        await self.set_location_by_coordinates(ctx, latitude, longtiude, timezone, diaspora)
+
+    @commands.command(name="setLocationByAddress")
+    async def self_loc_by_address_command(self, ctx, *address):
+        await self.set_location_by_address(ctx, *address)
+
+    @commands.command(name="zmanim")
+    async def get_zmanim_command(self, ctx):
+        await self.get_zmanim(ctx)
 
 
 def setup(bot):

@@ -1,4 +1,3 @@
-import discord
 from discord.ext import commands
 import os.path
 import aiosqlite
@@ -51,7 +50,6 @@ async def on_ready():
         await cursor.close()
         await db.close()
     print(f"Logged in as {bot.user.name} ({bot.user.id}) on {len(bot.guilds)} servers")
-
     cog_list = ["Text", "HebrewDate", "Help", "Status", "Zmanim"]
 
     for cog in cog_list:

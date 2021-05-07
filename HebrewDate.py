@@ -58,16 +58,16 @@ class HebrewDate(commands.Cog):
                     """
 
     @commands.command(name="hebrewDate")
-    async def hebrew_date(self, ctx):
+    async def hebrew_date_command(self, ctx):
         date = hdate.HDate(datetime.datetime.now(), hebrew=False)
         await create_embed(ctx, date.hebrew_date)
 
     @commands.command(name="events")
-    async def events_today(self, ctx):
+    async def events_today_command(self, ctx):
         await create_embed(ctx, self.events_str)
 
     @commands.command(name="dateToHebrew")
-    async def date_to_hebrew(self, ctx, year, month, day):
+    async def date_to_hebrew_command(self, ctx, year, month, day):
         gregorian_date = datetime.datetime(int(year), int(month), int(day))
         date = hdate.HDate(gregorian_date, hebrew=False)
         await create_embed(ctx, date.hebrew_date)
