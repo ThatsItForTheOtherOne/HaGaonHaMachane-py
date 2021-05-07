@@ -75,7 +75,9 @@ class Text(commands.Cog):
         translation = parsed_string[1].replace("'", "")
         db = await aiosqlite.connect("haGaon.db")
         cursor = await db.cursor()
-        await cursor.execute(f"SELECT user_id FROM translation WHERE user_id = {ctx.message.author.id}")
+        sql = "SELECT user_id FROM main WHERE user_id = ?"
+        val = (ctx.message.author.id,)
+        await cursor.execute(sql, val)
         result = await cursor.fetchone()
         if result is None:
             sql = "INSERT INTO translation(user_id, work, translation) VALUES(?, ?, ?)"

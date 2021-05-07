@@ -21,7 +21,9 @@ class Zmanim(commands.Cog):
         else:
             db = await aiosqlite.connect("haGaon.db")
             cursor = await db.cursor()
-            await cursor.execute(f"SELECT user_id FROM main WHERE user_id = {ctx.message.author.id}")
+            sql = "SELECT user_id FROM main WHERE user_id = ?"
+            val = (ctx.message.author.id,)
+            await cursor.execute(sql, val)
             result = await cursor.fetchone()
             if result is None:
                 sql = (
@@ -55,7 +57,9 @@ class Zmanim(commands.Cog):
             print(f"{timezone} {diaspora} {location.raw}")
             db = await aiosqlite.connect("haGaon.db")
             cursor = await db.cursor()
-            await cursor.execute(f"SELECT user_id FROM main WHERE user_id = {ctx.message.author.id}")
+            sql = "SELECT user_id FROM main WHERE user_id = ?"
+            val = (ctx.message.author.id,)
+            await cursor.execute(sql, val)
             result = await cursor.fetchone()
             if result is None:
                 sql = (
@@ -75,7 +79,9 @@ class Zmanim(commands.Cog):
     async def getZmanim(self, ctx):
         db = await aiosqlite.connect("haGaon.db")
         cursor = await db.cursor()
-        await cursor.execute(f"SELECT * FROM main WHERE user_id = {ctx.message.author.id}")
+        sql = "SELECT user_id FROM main WHERE user_id = ?"
+        val = (ctx.message.author.id,)
+        await cursor.execute(sql, val)
         result = await cursor.fetchone()
         if result is None:
             await create_embed(ctx, "Run setLocation first!!")
