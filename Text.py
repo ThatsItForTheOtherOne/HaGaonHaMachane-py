@@ -2,12 +2,10 @@ import aiohttp
 import discord
 from discord.ext import commands
 import json
-from urllib.request import urlopen
 from sendText import create_embed
 from aiohttp import ClientSession
 import aiosqlite
 import re
-from typing import List, Tuple
 import textwrap
 
 class Text(commands.Cog):
@@ -71,11 +69,6 @@ class Text(commands.Cog):
 
         await create_embed(ctx, await self.parse_sefaria_text(verse_text))
         
-    async def replace_spaces_with_underscores(self, string):
-        while string.count(" ") != 0 and string.count(" ") != 1:
-            string = re.sub(" ", "_", string, count=1)
-        return string
-
     async def get_translation(self, ctx, book):
         db = await aiosqlite.connect("haGaon.db")
         book = book.replace("_", " ")
@@ -103,8 +96,8 @@ class Text(commands.Cog):
         sefaria_obj = json.loads(body)
         translations = ''
         counter = 1
-        for x in sefaria_obj['versions']:
-            if not x['language'] == 'he':
+        for x in sefaria_obj["versions"]:
+            if not x["language"] == 'he':
                 translations += f'\n {counter} - {x["versionTitle"]}'
                 counter += 1
         translation_chunks = textwrap.wrap(translations, 2000, break_long_words=False, replace_whitespace=False)
