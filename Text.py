@@ -136,7 +136,7 @@ class Text(commands.Cog):
             return
         db = await aiosqlite.connect("haGaon.db")
         cursor = await db.cursor()
-        sql = "SELECT user_id FROM main WHERE user_id = ?"
+        sql = "SELECT * FROM translation WHERE user_id = ?"
         val = (ctx.message.author.id,)
         await cursor.execute(sql, val)
         result = await cursor.fetchone()
