@@ -96,7 +96,7 @@ class Text(commands.Cog):
                 body = await response.text()
         sefaria_obj = json.loads(body)
         if 'error' in sefaria_obj:
-            await create_embed(ctx, "Sefaria's API has returned an error! Check your command!")
+            await create_embed(ctx, "Sefaria's API has returned an error! Check your parameters!")
             return
         translations = ''
         counter = 1
@@ -123,7 +123,7 @@ class Text(commands.Cog):
                 body = await response.text()
         sefaria_obj = json.loads(body)
         if 'error' in sefaria_obj:
-            await create_embed(ctx, "Sefaria's API has returned an error! Check your command!")
+            await create_embed(ctx, "Sefaria's API has returned an error! Check your parameters!")
             return
         translation_list = []
         for x in sefaria_obj['versions']:
