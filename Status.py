@@ -23,14 +23,23 @@ class Status(commands.Cog):
                 sefaria_obj = json.loads(body)
             date = hdate.HDate(datetime.datetime.now(), hebrew=False)
             status_string = f"""
-                    {date.hebrew_date}
-                    | {self.bot.command_prefix}help
+                    {self.bot.description}
+                    | {date.hebrew_date}
                     | Today's Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
                     | Today's Haftarah: {sefaria_obj["calendar_items"][1]["displayValue"]["en"]}
                     """
             status_string = status_string.replace("\n", " ")
             status_string = status_string.replace("\r", " ")
             status_string = status_string.replace("                    ", "")
+            if len(status_string) > 128:
+                status_string = f"""
+                    {date.hebrew_date}
+                    | Today's Parasha: {sefaria_obj["calendar_items"][0]["displayValue"]["en"]}
+                    | Today's Haftarah: {sefaria_obj["calendar_items"][1]["displayValue"]["en"]}
+                    """
+                status_string = status_string.replace("\n", " ")
+                status_string = status_string.replace("\r", " ")
+                status_string = status_string.replace("                    ", "")
             print(f"The status string is {len(status_string)} chars")
             game = discord.Game(status_string)
             await self.bot.change_presence(status=discord.Status.online, activity=game)

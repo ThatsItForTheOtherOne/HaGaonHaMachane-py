@@ -15,14 +15,12 @@ class Help(commands.Cog):
         command = command.lower()
         if command == "help":
             embed = discord.Embed(
-                title="Help",
-                color=0x0000FF,
-                description="**Type " + self.bot.command_prefix + "help <category>**, e.g. `!!help text`",
+                title="Help", color=0x0000FF, description="**Type !!help <category>**, e.g. `!!help text`",
             )
             embed.add_field(name="Sections", value="\n• Text\n• Calendar\n", inline=False)
             embed.add_field(
                 name="Help",
-                value=f"• Code: [GitHub](https://github.com/Acher224/HaGaonHaMachane-py)\n • Invite: [Link](https://discord.com/api/oauth2/authorize?client_id=466676353907818516&permissions=2147568640&scope=applications.commands%20bot)\n • Owner: {self.owner}",
+                value=f"• Code: [GitHub](https://github.com/Acher224/HaGaonHaMachane-py)\n • Invite: [Link](https://discord.com/api/oauth2/authorize?client_id=466676353907818516&permissions=2147568640&scope=applications.commands%20bot)\n • Owner: {self.owner}\n • Offical Server: [Link](https://discord.gg/tSW3RWUvJS)",
                 inline=False,
             )
             embed.set_footer(
