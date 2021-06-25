@@ -143,14 +143,15 @@ class Text(commands.Cog):
         if result is None:
             sql = "INSERT INTO translation(user_id, work, translation) VALUES(?, ?, ?)"
             val = (ctx.message.author.id, parameters[0].rstrip(), translation)
+            await create_embed(ctx, f"Translation for {parameters[0].rstrip()} set to {translation} successfully!")
         elif result is not None:
             sql = "UPDATE translation SET work = ?, translation = ? WHERE user_id = ?"
             val = (parameters[0].rstrip(), translation, ctx.message.author.id)
+            await create_embed(ctx, f"Translation for {parameters[0].rstrip()} updated to {translation} successfully!")
         await cursor.execute(sql, val)
         await db.commit()
         await cursor.close()
         await db.close()
-        await create_embed(ctx, f"Translation for {parameters[0].rstrip()} set to {translation} successfully!")
 
     @commands.command(name="hebrewText", aliases=['hebrew_text', 'hebrewtext'])
     async def hebrew_text_command(self, ctx, *verse):
