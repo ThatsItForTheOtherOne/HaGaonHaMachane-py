@@ -48,8 +48,8 @@ class Help(commands.Cog):
                 inline=True,
                 value="Grabs text from Sefaria API and posts it in Hebrew."
                 "\n\n__Aliases__"
-                "\n\nhebrew_text"
-                "\n\nhebrewtext"
+                "\nhebrew_text"
+                "\nhebrewtext"
                 "\n\n__Usage__"
                 "\n\n`!!hebrewText <book> <chapter>:<verse>`"
                 "\n\nExample: `!!hebrewText Genesis 1:1`"
@@ -61,8 +61,8 @@ class Help(commands.Cog):
                 inline=True,
                 value="Set the translation for a specific book."
                 "\n\n__Aliases__"
-                "\n\nset_translation"
-                "\n\nsettranslation"
+                "\nset_translation"
+                "\nsettranslation"
                 "\n\nTranslation indexes can be grabbed with getTranslations"
                 "\n\n__Usage__"
                 "\n\n`!!setTranslation <book> <translation_index>`"
@@ -73,8 +73,8 @@ class Help(commands.Cog):
                 inline=True,
                 value="Get the translations for a specific book."
                 "\n\n__Aliases__"
-                "\n\nget_translation"
-                "\n\ngettranslation"
+                "\nget_translation"
+                "\ngettranslation"
                 "\n\n__Usage__"
                 "\n\n!!getTranslation <book>"
                 "\n\nExample: `!!getTranslation Genesis`",
@@ -93,8 +93,8 @@ class Help(commands.Cog):
                 inline=True,
                 value="Converts today's date to the Hebrew date"
                 "\n\n__Aliases__"
-                "\n\nhebrew_date"
-                "\n\nhebrewdate"
+                "\nhebrew_date"
+                "\nhebrewdate"
                 "\n\n__Usage__"
                 "\n\nExample: `!!hebrewDate`",
             )
@@ -110,8 +110,8 @@ class Help(commands.Cog):
                 inline=True,
                 value="Converts a date to the date on the Hebrew calendar"
                 "\n\n__Aliases__"
-                "\n\ndate_to_hebrew"
-                "\n\ndatetohebrew"
+                "\ndate_to_hebrew"
+                "\ndatetohebrew"
                 "\n\n__Usage__"
                 "\n\n``!!dateToHebrew <year> <month> <day>``"
                 "\n\nExample: `!!dateToHebrew 2020 1 1`",
@@ -123,8 +123,8 @@ class Help(commands.Cog):
                 "\nLatitude/Longitude assume N/E."
                 "\nTimezones must be [tzdata](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) format."
                 "\n\n__Aliases__"
-                "\n\nset_location_by_coordinates"
-                "\n\nsetlocationbycoordinates"
+                "\nset_location_by_coordinates"
+                "\nsetlocationbycoordinates"
                 "\n\n__Usage__"
                 "\n\n``!!setLocationByCoordinates <Latitude> <Longitude> <tzdata timezone> <diaspora true/false>``"
                 "\n\nExample: `!!setLocationByCoordinates 40.7128 -74.0060 America/New_York True`",
@@ -136,8 +136,8 @@ class Help(commands.Cog):
                 "\nAddress can be many different formats, but <Street>, <City>, <Country> works best"
                 "\nThis command is slow! It calculates IANA timezones using lat/long which is slow! Be patient!"
                 "\n\n__Aliases__"
-                "\n\nset_location_by_address"
-                "\n\nsetlocationbyaddress"
+                "\nset_location_by_address"
+                "\nsetlocationbyaddress"
                 "\n\n__Usage__"
                 "\n\n``!!setLocationByAddress <Address>``"
                 "\n\nExample: `!!setLocationByAddress Nahalat Binyamin St 12, Tel Aviv-Yafo, Israel`",

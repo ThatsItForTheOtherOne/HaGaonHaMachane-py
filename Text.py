@@ -68,7 +68,7 @@ class Text(commands.Cog):
             return
 
         await create_embed(ctx, await self.parse_sefaria_text(verse_text))
-        
+
     async def get_translation(self, ctx, book):
         db = await aiosqlite.connect("haGaon.db")
         book = book.replace("_", " ")
@@ -88,7 +88,8 @@ class Text(commands.Cog):
         await db.close()
         return f"&ven={translation}"
     
-    async def get_translation_list(self, ctx, book):
+    async def get_translation_list(self, ctx, *book):
+        book = " ".join(book)
         url = f"{self.api_url}{book}"
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
@@ -111,6 +112,9 @@ class Text(commands.Cog):
         except:
             await create_embed(ctx, f"An internal error occured! Check your parameters or try later!")
         url = f"{self.api_url}{parameters[0].rstrip()}"
+        if(parameters[1] == ''):
+            await create_embed(ctx, f"An internal error occured! Check your parameters or try later!")
+            return
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
                 body = await response.text()
