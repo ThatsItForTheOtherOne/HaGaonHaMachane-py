@@ -57,7 +57,7 @@ class HebrewDate(commands.Cog):
                     Halakha Yomit: {sefaria_obj["calendar_items"][8]["displayValue"]["en"]}
                     """
 
-    @commands.command(name="hebrewDate")
+    @commands.command(name="hebrewDate", aliases=["hebrew_date", "hebrewdate"])
     async def hebrew_date_command(self, ctx):
         date = hdate.HDate(datetime.datetime.now(), hebrew=False)
         await create_embed(ctx, date.hebrew_date)
@@ -66,7 +66,7 @@ class HebrewDate(commands.Cog):
     async def events_today_command(self, ctx):
         await create_embed(ctx, self.events_str)
 
-    @commands.command(name="dateToHebrew")
+    @commands.command(name="dateToHebrew", aliases=["date_to_hebrew", "datetohebrew"])
     async def date_to_hebrew_command(self, ctx, year, month, day):
         gregorian_date = datetime.datetime(int(year), int(month), int(day))
         date = hdate.HDate(gregorian_date, hebrew=False)

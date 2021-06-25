@@ -8,6 +8,7 @@ from aiohttp import ClientSession
 import aiosqlite
 import re
 from typing import List, Tuple
+import textwrap
 
 class Text(commands.Cog):
     def __init__(self, bot):
@@ -46,33 +47,19 @@ class Text(commands.Cog):
             key_type = "he"
         elif ctx.command.name == "text":
             key_type = "text"
-        async def parse_verse(verse: str) -> str:
-            async def parse_verses(verse: str) -> Tuple[str, str]:
-                if "-" in verse:
-                    book, chapter, first, final = re.compile(r"(\S+)\s(\S+):(\d+)-(\d+)", re.IGNORECASE).match(verse).groups()
-                    return (f"{book}.{chapter}.{first}-{final}", book)
-
-                elif ":" in verse:
-                    book, chapter, verse = re.compile(r"(\S+)\s(\S+):(\d+)", re.IGNORECASE).match(verse).groups()
-                    return (f"{book}.{chapter}.{verse}", book)
-
-                else:
-                    book, verse = re.compile(r"(\S+)\s(\S+)", re.IGNORECASE).match(verse).groups()
-                    return (f"{book}.{verse}", book)
-
-            url, book = await parse_verses(verse)
-            return f"{self.api_url}{url}?context=0{await self.get_translation(ctx, book)}"
-
+        verse = ' '.join(verse)
+        work = re.compile(r"(^[^0-9]*)", re.IGNORECASE).match(verse).groups()
+        url = f"{self.api_url}{verse}?context=0{await self.get_translation(ctx, work[0].rstrip())}"
+        
         async with aiohttp.ClientSession() as session:
-            async with session.get(await parse_verse(await self.replace_spaces_with_underscores(" ".join(verse)))) as response:
+            async with session.get(url) as response:
                 body = await response.text()
-
                 if response.status == 404:
-                    await create_embed(ctx, "This verse doesn't exist. Check that your input is well formed, or that the verse is available in your desired translation.")
+                    await create_embed(ctx, "Sefaria has sent an unknown response, is your verse correct?")
                     return
-
                 sefaria_obj = json.loads(body)
-
+        if not key_type in sefaria_obj:
+            await create_embed(ctx, "This verse doesn't exist. Check that your input is well formed or that the verse is available in your desired translation.")
         if isinstance(verses := sefaria_obj[key_type], list):
             verse_text = " ".join(verses)
         elif isinstance(verse := sefaria_obj[key_type], str):
@@ -107,16 +94,43 @@ class Text(commands.Cog):
         await cursor.close()
         await db.close()
         return f"&ven={translation}"
+    
+    async def get_translation_list(self, ctx, book):
+        url = f"{self.api_url}{book}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                body = await response.text()
+        sefaria_obj = json.loads(body)
+        translations = ''
+        counter = 1
+        for x in sefaria_obj['versions']:
+            if not x['language'] == 'he':
+                translations += f'\n {counter} - {x["versionTitle"]}'
+                counter += 1
+        translation_chunks = textwrap.wrap(translations, 2000, break_long_words=False, replace_whitespace=False)
+        for string in translation_chunks:
+            await create_embed(ctx, string)
 
-    async def set_translation(self, ctx, *string):
-        string = " ".join(string)
+    async def set_translation(self, ctx, *parameters):
+        parameters = " ".join(parameters)
         try:
-            parsed_string = re.compile(r"(\'.*?\')\s(\'.*?\')").match(string).groups()
+            parameters = re.compile(r"([^\d]+)(.*)", re.IGNORECASE).match(parameters).groups()
         except:
-            await create_embed(ctx, f"Invalid parameters! Check {self.bot.command_prefix}help for usage!")
+            await create_embed(ctx, f"An internal error occured! Check your parameters or try later!")
+        url = f"{self.api_url}{parameters[0].rstrip()}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                body = await response.text()
+        sefaria_obj = json.loads(body)
+        translation_list = []
+        for x in sefaria_obj['versions']:
+            if not x['language'] == 'he':
+                translation_list.append(x["versionTitle"])
+        try:
+            translation = translation_list[int(parameters[1]) - 1]
+        except IndexError:
+            await create_embed(ctx, "Invalid translation!")
             return
-        book = parsed_string[0].replace("'", "")
-        translation = parsed_string[1].replace("'", "")
         db = await aiosqlite.connect("haGaon.db")
         cursor = await db.cursor()
         sql = "SELECT user_id FROM main WHERE user_id = ?"
@@ -125,20 +139,17 @@ class Text(commands.Cog):
         result = await cursor.fetchone()
         if result is None:
             sql = "INSERT INTO translation(user_id, work, translation) VALUES(?, ?, ?)"
-            val = (ctx.message.author.id, book, translation)
+            val = (ctx.message.author.id, parameters[0].rstrip(), translation)
         elif result is not None:
             sql = "UPDATE translation SET work = ?, translation = ? WHERE user_id = ?"
-            val = (book, translation, ctx.message.author.id)
+            val = (parameters[0].rstrip(), translation, ctx.message.author.id)
         await cursor.execute(sql, val)
         await db.commit()
         await cursor.close()
         await db.close()
-        if translation == "":
-            await create_embed(ctx, f"Translation for {book} set to default successfully!")
-        else:
-            await create_embed(ctx, f"Translation for {book} set to {translation} successfully!")
+        await create_embed(ctx, f"Translation for {parameters[0].rstrip()} set to {translation} successfully!")
 
-    @commands.command(name="hebrewText")
+    @commands.command(name="hebrewText", aliases=['hebrew_text', 'hebrewtext'])
     async def hebrew_text_command(self, ctx, *verse):
         await self.text_command(ctx, *verse)
 
@@ -146,12 +157,13 @@ class Text(commands.Cog):
     async def regular_text_command(self, ctx, *verse):
         await self.text_command(ctx, *verse)
 
-    @commands.command(name="setTranslation")
+    @commands.command(name="setTranslation", aliases=['settranslation', 'set_translation'])
     async def set_translation_command(self, ctx, *string):
         await self.set_translation(ctx, *string)
-
-
-
+    
+    @commands.command(name="getTranslations", aliases=['gettranslations', 'get_translations'])
+    async def get_translation_list_command(self, ctx, *string):
+        await self.get_translation_list(ctx, *string)
 
 def setup(bot):
     bot.add_cog(Text(bot))

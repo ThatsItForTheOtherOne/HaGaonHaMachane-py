@@ -47,6 +47,9 @@ class Help(commands.Cog):
                 name="hebrewText",
                 inline=True,
                 value="Grabs text from Sefaria API and posts it in Hebrew."
+                "\n\n__Aliases__"
+                "\n\nhebrew_text"
+                "\n\nhebrewtext"
                 "\n\n__Usage__"
                 "\n\n`!!hebrewText <book> <chapter>:<verse>`"
                 "\n\nExample: `!!hebrewText Genesis 1:1`"
@@ -57,13 +60,24 @@ class Help(commands.Cog):
                 name="setTranslation",
                 inline=True,
                 value="Set the translation for a specific book."
-                "\n **The book and translation must be surrounded with single quotes!**"
-                "\n To reset to default translation, run the command with the translation name blank."
-                "\n Names must be copied from Sefaria perfectly or it will fail."
+                "\n\n__Aliases__"
+                "\n\nset_translation"
+                "\n\nsettranslation"
+                "\n\nTranslation indexes can be grabbed with getTranslations"
                 "\n\n__Usage__"
-                "\n\n`!!setTranslation '<book>' '<translation>'`"
-                "\n\nExample: `!!setTranslation 'Genesis' 'Tanakh: The Holy Scriptures, published by JPS'`"
-                "\n\nExample: `!!setTranslation 'Genesis' ''`",
+                "\n\n`!!setTranslation <book> <translation_index>`"
+                "\n\nExample: `!!setTranslation Genesis 26`",
+            )
+            embed.add_field(
+                name="getTranslations",
+                inline=True,
+                value="Get the translations for a specific book."
+                "\n\n__Aliases__"
+                "\n\nget_translation"
+                "\n\ngettranslation"
+                "\n\n__Usage__"
+                "\n\n!!getTranslation <book>"
+                "\n\nExample: `!!getTranslation Genesis`",
             )
 
             embed.set_footer(
@@ -78,6 +92,9 @@ class Help(commands.Cog):
                 name="hebrewDate",
                 inline=True,
                 value="Converts today's date to the Hebrew date"
+                "\n\n__Aliases__"
+                "\n\nhebrew_date"
+                "\n\nhebrewdate"
                 "\n\n__Usage__"
                 "\n\nExample: `!!hebrewDate`",
             )
@@ -92,6 +109,9 @@ class Help(commands.Cog):
                 name="dateToHebrew",
                 inline=True,
                 value="Converts a date to the date on the Hebrew calendar"
+                "\n\n__Aliases__"
+                "\n\ndate_to_hebrew"
+                "\n\ndatetohebrew"
                 "\n\n__Usage__"
                 "\n\n``!!dateToHebrew <year> <month> <day>``"
                 "\n\nExample: `!!dateToHebrew 2020 1 1`",
@@ -102,6 +122,9 @@ class Help(commands.Cog):
                 value="Sets a location for zmanim."
                 "\nLatitude/Longitude assume N/E."
                 "\nTimezones must be [tzdata](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) format."
+                "\n\n__Aliases__"
+                "\n\nset_location_by_coordinates"
+                "\n\nsetlocationbycoordinates"
                 "\n\n__Usage__"
                 "\n\n``!!setLocationByCoordinates <Latitude> <Longitude> <tzdata timezone> <diaspora true/false>``"
                 "\n\nExample: `!!setLocationByCoordinates 40.7128 -74.0060 America/New_York True`",
@@ -112,6 +135,9 @@ class Help(commands.Cog):
                 value="Sets a location for zmanim."
                 "\nAddress can be many different formats, but <Street>, <City>, <Country> works best"
                 "\nThis command is slow! It calculates IANA timezones using lat/long which is slow! Be patient!"
+                "\n\n__Aliases__"
+                "\n\nset_location_by_address"
+                "\n\nsetlocationbyaddress"
                 "\n\n__Usage__"
                 "\n\n``!!setLocationByAddress <Address>``"
                 "\n\nExample: `!!setLocationByAddress Nahalat Binyamin St 12, Tel Aviv-Yafo, Israel`",

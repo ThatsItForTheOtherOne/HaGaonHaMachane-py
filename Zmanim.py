@@ -90,12 +90,16 @@ class Zmanim(commands.Cog):
         await cursor.close()
         await db.close()
 
-    @commands.command(name="setLocationByCoordinates")
-    async def self_loc_by_coords_command(self, ctx, latitude, longtiude, timezone, diaspora):
+    @commands.command(
+        name="setLocationByCoordinates", aliases=["set_location_by_coordinates", "setlocationbycoordinates"]
+    )
+    async def set_loc_by_coords_command(self, ctx, latitude, longtiude, timezone, diaspora):
         await self.set_location_by_coordinates(ctx, latitude, longtiude, timezone, diaspora)
 
-    @commands.command(name="setLocationByAddress")
-    async def self_loc_by_address_command(self, ctx, *address):
+    @commands.command(
+        name="setLocationByAddress", aliases=["set_location_by_address", "setlocationbyaddress"]
+    )
+    async def set_loc_by_address_command(self, ctx, *address):
         await self.set_location_by_address(ctx, *address)
 
     @commands.command(name="zmanim")
