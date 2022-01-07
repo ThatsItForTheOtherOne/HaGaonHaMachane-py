@@ -39,6 +39,13 @@ class Text(commands.Cog):
         sefaria_text = sefaria_text.replace("&lt;", "")
         sefaria_text = sefaria_text.replace("&gt;", "")
         return sefaria_text
+    async def sefaria_request(self, url):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as response:
+                body = await response.text()
+                if response.status == 404:
+                    return None
+                return json.loads(body)
 
     async def text_command(self, ctx, *verse):
         if ctx.command.name == "hebrewText":
@@ -49,13 +56,13 @@ class Text(commands.Cog):
         work = re.compile(r"(^[^0-9]*)", re.IGNORECASE).match(verse).groups()
         url = f"{self.api_url}{verse}?context=0{await self.get_translation(ctx, work[0].rstrip())}"
         
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                body = await response.text()
-                if response.status == 404:
-                    await create_embed(ctx, "Sefaria has sent an unknown response, is your verse correct?")
-                    return
-                sefaria_obj = json.loads(body)
+        sefaria_obj = await self.sefaria_request(url)
+        if 'error' in sefaria_obj:
+            await create_embed(ctx, f"Sefaria says: {sefaria_obj['error']}")
+            return
+        if sefaria_obj['versionTitle'] == "Tanakh: The Holy Scriptures, published by JPS": #JPS has unterminated HTML tags(????) and I cannot filter them
+            url = f"{self.api_url}{verse}?context=0&ven=The_Koren_Jerusalem_Bible"
+            sefaria_obj = await self.sefaria_request(url)
         if not key_type in sefaria_obj:
             await create_embed(ctx, "This verse doesn't exist. Check that your input is well formed or that the verse is available in your desired translation.")
         if isinstance(verses := sefaria_obj[key_type], list):
