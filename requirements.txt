@@ -4,3 +4,4 @@ markdownify
 aiosqlite
 geopy
 tzwhere
+bs4

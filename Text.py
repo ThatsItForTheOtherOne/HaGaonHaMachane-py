@@ -7,6 +7,7 @@ from aiohttp import ClientSession
 import aiosqlite
 import re
 import textwrap
+from bs4 import BeautifulSoup
 
 class Text(commands.Cog):
     def __init__(self, bot):
@@ -15,30 +16,34 @@ class Text(commands.Cog):
         self.api_url = "https://www.sefaria.org/api/texts/"
     
     async def parse_sefaria_text(self, sefaria_text):
-        if not "<i></i>" in sefaria_text and "<i>" in sefaria_text and "</i>" in sefaria_text:
-            sefaria_text = sefaria_text.replace("<i>", "*")
-            sefaria_text = sefaria_text.replace("</i>", "*")
+        footnotes_string = ""
+
+        soup = BeautifulSoup(sefaria_text, "html.parser")
+        if "class=\"footnote\"" in sefaria_text:
+            for texts in soup.find_all('i', class_='footnote'):
+                bolded_text = ""
+                bolded = texts.find('b')
+                if type(bolded) is not type(None):
+                    bolded_text = f"**{bolded.get_text().strip()}**"
+                    bolded.decompose()
+                footnotes_string += f"\n* {bolded_text}: {texts.get_text()}"
+                texts.decompose()
+            for texts in soup.find_all('sup'):
+                texts.decompose()
+
+        for a in soup.findAll('b'):
+            a.replace_with(f"**{a.get_text()}**")
+        for a in soup.findAll('i'):
+            a.replace_with(f"*{a.get_text()}*")
+        for a in soup.findAll('strong'):
+            a.replace_with(f"**{a.get_text()}**")
+
+        cleaned_string = f"{soup.text}\n\n{footnotes_string}"
+        if len(cleaned_string) < 2048:
+            return cleaned_string
         else:
-            sefaria_text = sefaria_text.replace("<i>", "")
-            sefaria_text = sefaria_text.replace("</i>", "")
-        if "<b>" in sefaria_text and "</b>" in sefaria_text:
-            sefaria_text = sefaria_text.replace("<b>", "**")
-            sefaria_text = sefaria_text.replace("</b>", "**")
-        else:
-            sefaria_text = sefaria_text.replace("<b>", "")
-            sefaria_text = sefaria_text.replace("</b>", "")
-        if "<strong>" in sefaria_text and "</strong>" in sefaria_text:
-            sefaria_text = sefaria_text.replace("<strong>", "***")
-            sefaria_text = sefaria_text.replace("</strong>", "***")
-        else:
-            sefaria_text = sefaria_text.replace("<strong>", "")
-            sefaria_text = sefaria_text.replace("</strong>", "")
-        sefaria_text = sefaria_text.replace("<span class=\"font1\">", "")
-        sefaria_text = sefaria_text.replace("</span>", "")
-        sefaria_text = sefaria_text.replace("<br>", "\n")
-        sefaria_text = sefaria_text.replace("&lt;", "")
-        sefaria_text = sefaria_text.replace("&gt;", "")
-        return sefaria_text
+            return soup.text
+
     async def sefaria_request(self, url):
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
