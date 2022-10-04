@@ -75,4 +75,4 @@ class HebrewDate(discord.ext.commands.Cog):
 
 
 async def setup(bot):
-    await bot.add_cog(HebrewDate(bot), guild=discord.Object(id=858012866383970305))
+    await bot.add_cog(HebrewDate(bot))

@@ -158,4 +158,4 @@ class Text(discord.ext.commands.Cog):
         await db.close()
     
 async def setup(bot):
-    await bot.add_cog(Text(bot), guild=discord.Object(id=858012866383970305))
+    await bot.add_cog(Text(bot))

@@ -55,7 +55,7 @@ async def on_ready():
 
     for cog in cog_list:
         await bot.load_extension(cog)
-    await bot.tree.sync(guild=discord.Object(id=858012866383970305))
+    await bot.tree.sync()
 
 
 
