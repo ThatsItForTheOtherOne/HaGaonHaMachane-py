@@ -1,21 +1,19 @@
 import discord
-from discord.ext import commands, tasks
-from aiohttp import ClientSession
+import aiohttp
 import datetime
 import hdate
 import json
 from urllib.request import urlopen
-import aiohttp
 
 
-class Status(commands.Cog):
+class Status(discord.ext.commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.session = ClientSession(loop=bot.loop)
+        self.session = aiohttp.ClientSession(loop=bot.loop)
         self.api_url = "https://www.sefaria.org/api/calendars"
         self.change_status.start()
 
-    @tasks.loop(hours=1)
+    @discord.ext.tasks.loop(hours=1)
     async def change_status(self):
         async with aiohttp.ClientSession() as session:
             async with session.get(self.api_url) as response:
@@ -45,5 +43,5 @@ class Status(commands.Cog):
             await self.bot.change_presence(status=discord.Status.online, activity=game)
 
 
-def setup(bot):
-    bot.add_cog(Status(bot))
+async def setup(bot):
+    await bot.add_cog(Status(bot))

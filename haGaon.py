@@ -1,8 +1,9 @@
+import discord
 from discord.ext import commands
 import os.path
 import aiosqlite
 
-bot = commands.Bot(command_prefix=["!!", "!"], description="HaGaon Ver. 10")
+bot = commands.Bot(command_prefix=["!!", "!"], description="HaGaon Ver. 10", intents=None)
 bot.remove_command("help")
 
 
@@ -50,10 +51,13 @@ async def on_ready():
         await cursor.close()
         await db.close()
     print(f"Logged in as {bot.user.name} ({bot.user.id}) on {len(bot.guilds)} servers")
-    cog_list = ["Text", "HebrewDate", "Help", "Status", "Zmanim"]
+    cog_list = ["Text", "HebrewDate", "Status"]
 
     for cog in cog_list:
-        bot.load_extension(cog)
+        await bot.load_extension(cog)
+    await bot.tree.sync(guild=discord.Object(id=858012866383970305))
+
+
 
 
 if os.path.isfile("token.txt"):

@@ -1,14 +1,12 @@
 import discord
-from discord.ext import commands
 
-
-async def create_embed(ctx, text):
+async def create_embed(interaction: discord.Interaction, text):
     if len(text) > 2048:
-        await ctx.send("MESSAGE TOO LONG!")
+        await interaction.response.send_message("MESSAGE TOO LONG!")
         return
     embed = discord.Embed(description=text, color=0x0000FF)
     embed.set_footer(
-        text=ctx.bot.description,
+        text=interaction.client.description,
         icon_url="https://cdn.discordapp.com/avatars/466676353907818516/c48b21b283307d9ff454ed221dc0aaa2.jpg?size=1024",
     )
-    await ctx.send(embed=embed)
+    await interaction.response.send_message(embed=embed)

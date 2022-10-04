@@ -1,51 +1,49 @@
 import discord
-from discord.ext import commands, tasks
-from aiohttp import ClientSession
+import aiohttp
 import aiosqlite
 from sendText import create_embed
 import hdate
-import datetime
 from geopy.geocoders import Nominatim
-from tzwhere import tzwhere
+import tzwhere
 
-
-class Zmanim(commands.Cog):
+class Zmanim(discord.ext.commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.session = ClientSession(loop=bot.loop)
-
-    async def set_location_by_coordinates(self, ctx, latitude, longtiude, timezone, diaspora):
-        if ctx.channel.type is not discord.ChannelType.private:
-            await create_embed(ctx, "This command is only for DMs!")
+        self.session = aiohttp.ClientSession(loop=bot.loop)
+    
+    @discord.app_commands.command(name="set_location_by_coordinates")
+    async def set_location_by_coordinates(self, interaction: discord.Interaction, latitude: float, longtiude: float, timezone: str, diaspora: bool):
+        if interaction.channel.type is not discord.ChannelType.private:
+            await create_embed(interaction, "This command is only for DMs!")
         else:
             db = await aiosqlite.connect("haGaon.db")
             cursor = await db.cursor()
             sql = "SELECT user_id FROM main WHERE user_id = ?"
-            val = (ctx.message.author.id,)
+            val = (interaction.user.id,)
             await cursor.execute(sql, val)
             result = await cursor.fetchone()
             if result is None:
                 sql = (
                     "INSERT INTO main(user_id, latitude, longitude, timezone, diaspora) VALUES(?, ?, ?, ?, ?)"
                 )
-                val = (ctx.message.author.id, latitude, longtiude, timezone, diaspora)
+                val = (interaction.user.id, latitude, longtiude, timezone, diaspora)
             elif result is not None:
                 sql = "UPDATE main SET latitude = ?, longitude  = ?, timezone = ?, diaspora = ? WHERE user_id = ?"
-                val = (latitude, longtiude, timezone, diaspora, ctx.message.author.id)
+                val = (latitude, longtiude, timezone, diaspora, interaction.user.id)
             await cursor.execute(sql, val)
             await db.commit()
             await cursor.close()
             await db.close()
-            await create_embed(ctx, "Location Set and Saved!")
-
-    async def set_location_by_address(self, ctx, *address):
-        if ctx.channel.type is not discord.ChannelType.private:
-            await create_embed(ctx, "This command is only for DMs!")
+            await create_embed(interaction, "Location Set and Saved!")
+    
+    @discord.app_commands.command(name="set_location_by_address")
+    async def set_location_by_address(self, interaction: discord.Interaction, address: str):
+        if interaction.channel.type is not discord.ChannelType.private:
+            await create_embed(interaction, "This command is only for DMs!")
         else:
             geolocator = Nominatim(user_agent="HaGaon HaMachane")
-            address_str = " ".join(address)
-            location = geolocator.geocode(address_str, language="en")
-            await create_embed(ctx, "Processing, this will take a second...")
+            location = geolocator.geocode(address, language="en")
+            await create_embed(interaction, "Processing, this will take a second...")
             tzwhere_obj = tzwhere.tzwhere()
             timezone = tzwhere_obj.tzNameAt(location.latitude, location.longitude)
             if "Israel" in location.address:
@@ -55,57 +53,41 @@ class Zmanim(commands.Cog):
             db = await aiosqlite.connect("haGaon.db")
             cursor = await db.cursor()
             sql = "SELECT user_id FROM main WHERE user_id = ?"
-            val = (ctx.message.author.id,)
+            val = (interaction.user.id,)
             await cursor.execute(sql, val)
             result = await cursor.fetchone()
             if result is None:
                 sql = (
                     "INSERT INTO main(user_id, latitude, longitude, timezone, diaspora) VALUES(?, ?, ?, ?, ?)"
                 )
-                val = (ctx.message.author.id, location.latitude, location.longitude, timezone, diaspora)
+                val = (interaction.user.id, location.latitude, location.longitude, timezone, diaspora)
             elif result is not None:
                 sql = "UPDATE main SET latitude = ?, longitude  = ?, timezone = ?, diaspora = ? WHERE user_id = ?"
-                val = (location.latitude, location.longitude, timezone, diaspora, ctx.message.author.id)
+                val = (location.latitude, location.longitude, timezone, diaspora, interaction.user.id)
             await cursor.execute(sql, val)
             await db.commit()
             await cursor.close()
             await db.close()
-            await create_embed(ctx, "Location Set and Saved!")
-
-    async def get_zmanim(self, ctx):
+            await create_embed(interaction, "Location Set and Saved!")
+    
+    @discord.app_commands.command(name="zmanim")
+    @discord.app_commands.guild_only
+    async def get_zmanim(self, interaction: discord.Interaction):
         db = await aiosqlite.connect("haGaon.db")
         cursor = await db.cursor()
         sql = "SELECT * FROM main WHERE user_id = ?"
-        val = (ctx.message.author.id,)
+        val = (interaction.user.id,)
         await cursor.execute(sql, val)
         result = await cursor.fetchone()
         if result is None:
-            await create_embed(ctx, "Run setLocation first!!")
+            await create_embed(interaction, "Run setLocation first!!")
         elif result is not None:
-            dias = result[4] == "True"
             location = hdate.Location(
-                longitude=float(result[2]), latitude=float(result[1]), timezone=result[3], diaspora=dias,
+                longitude=float(result[2]), latitude=float(result[1]), timezone=result[3], diaspora=result[4],
             )
-            await create_embed(ctx, str(hdate.Zmanim(location=location, hebrew=False)))
+            await create_embed(interaction, str(hdate.Zmanim(location=location, hebrew=False)))
         await cursor.close()
         await db.close()
 
-    @commands.command(
-        name="setLocationByCoordinates", aliases=["set_location_by_coordinates", "setlocationbycoordinates"]
-    )
-    async def set_loc_by_coords_command(self, ctx, latitude, longtiude, timezone, diaspora):
-        await self.set_location_by_coordinates(ctx, latitude, longtiude, timezone, diaspora)
-
-    @commands.command(
-        name="setLocationByAddress", aliases=["set_location_by_address", "setlocationbyaddress"]
-    )
-    async def set_loc_by_address_command(self, ctx, *address):
-        await self.set_location_by_address(ctx, *address)
-
-    @commands.command(name="zmanim")
-    async def get_zmanim_command(self, ctx):
-        await self.get_zmanim(ctx)
-
-
-def setup(bot):
-    bot.add_cog(Zmanim(bot))
+async def setup(bot):
+   await bot.add_cog(Zmanim(bot), guild=discord.Object(id=858012866383970305))

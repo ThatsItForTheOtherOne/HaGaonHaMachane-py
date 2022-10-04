@@ -1,18 +1,17 @@
 import discord
-from discord.ext import commands, tasks
-from aiohttp import ClientSession
+from discord.ext import tasks
+import aiohttp
 from sendText import create_embed
 import datetime
 import hdate
 import json
 from urllib.request import urlopen
-import aiohttp
 
 
-class HebrewDate(commands.Cog):
+class HebrewDate(discord.ext.commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.session = ClientSession(loop=bot.loop)
+        self.session = aiohttp.ClientSession(loop=bot.loop)
         self.api_url = "https://www.sefaria.org/api/calendars"
         self.events_str = ""
         self.grab_new_events.start()
@@ -56,22 +55,24 @@ class HebrewDate(commands.Cog):
                     Daily Rambam 3 Chapters: {sefaria_obj["calendar_items"][6]["displayValue"]["en"]}
                     Halakha Yomit: {sefaria_obj["calendar_items"][8]["displayValue"]["en"]}
                     """
-
-    @commands.command(name="hebrewDate", aliases=["hebrew_date", "hebrewdate"])
+    @discord.app_commands.command(name="hebrew_date", description="Get today's hebrew date")
+    @discord.app_commands.guild_only
     async def hebrew_date_command(self, ctx):
         date = hdate.HDate(datetime.datetime.now(), hebrew=False)
         await create_embed(ctx, date.hebrew_date)
-
-    @commands.command(name="events")
+    
+    @discord.app_commands.command(name="events", description="See today's daily readings")
+    @discord.app_commands.guild_only
     async def events_today_command(self, ctx):
         await create_embed(ctx, self.events_str)
 
-    @commands.command(name="dateToHebrew", aliases=["date_to_hebrew", "datetohebrew"])
-    async def date_to_hebrew_command(self, ctx, year, month, day):
-        gregorian_date = datetime.datetime(int(year), int(month), int(day))
+    @discord.app_commands.command(name="date_to_hebrew", description="Convert a Gregorian date to hebrew")
+    @discord.app_commands.guild_only
+    async def date_to_hebrew_command(self, ctx, year: int, month: int, day: int):
+        gregorian_date = datetime.datetime(year, month, day)
         date = hdate.HDate(gregorian_date, hebrew=False)
         await create_embed(ctx, date.hebrew_date)
 
 
-def setup(bot):
-    bot.add_cog(HebrewDate(bot))
+async def setup(bot):
+    await bot.add_cog(HebrewDate(bot), guild=discord.Object(id=858012866383970305))
