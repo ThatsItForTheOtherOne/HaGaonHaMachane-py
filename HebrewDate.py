@@ -5,7 +5,6 @@ from sendText import create_embed
 import datetime
 import hdate
 import json
-from urllib.request import urlopen
 
 
 class HebrewDate(discord.ext.commands.Cog):
@@ -23,6 +22,7 @@ class HebrewDate(discord.ext.commands.Cog):
             async with session.get(self.api_url) as response:
                 body = await response.text()
                 sefaria_obj = json.loads(body)
+            
             if date.is_holiday == False and 0 < date.omer_day < 50:
                 self.events_str = f"""
                     Omer: {date.omer_day}

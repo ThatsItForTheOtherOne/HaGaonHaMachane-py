@@ -27,7 +27,7 @@ class Zmanim(discord.ext.commands.Cog):
                     "INSERT INTO main(user_id, latitude, longitude, timezone, diaspora) VALUES(?, ?, ?, ?, ?)"
                 )
                 val = (interaction.user.id, latitude, longtiude, timezone, diaspora)
-            elif result is not None:
+            else:
                 sql = "UPDATE main SET latitude = ?, longitude  = ?, timezone = ?, diaspora = ? WHERE user_id = ?"
                 val = (latitude, longtiude, timezone, diaspora, interaction.user.id)
             await cursor.execute(sql, val)
@@ -61,7 +61,7 @@ class Zmanim(discord.ext.commands.Cog):
                     "INSERT INTO main(user_id, latitude, longitude, timezone, diaspora) VALUES(?, ?, ?, ?, ?)"
                 )
                 val = (interaction.user.id, location.latitude, location.longitude, timezone, diaspora)
-            elif result is not None:
+            else:
                 sql = "UPDATE main SET latitude = ?, longitude  = ?, timezone = ?, diaspora = ? WHERE user_id = ?"
                 val = (location.latitude, location.longitude, timezone, diaspora, interaction.user.id)
             await cursor.execute(sql, val)
@@ -81,7 +81,7 @@ class Zmanim(discord.ext.commands.Cog):
         result = await cursor.fetchone()
         if result is None:
             await create_embed(interaction, "Run setLocation first!!")
-        elif result is not None:
+        else:
             location = hdate.Location(
                 longitude=float(result[2]), latitude=float(result[1]), timezone=result[3], diaspora=result[4],
             )

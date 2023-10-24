@@ -3,7 +3,6 @@ import aiohttp
 import datetime
 import hdate
 import json
-from urllib.request import urlopen
 
 
 class Status(discord.ext.commands.Cog):
