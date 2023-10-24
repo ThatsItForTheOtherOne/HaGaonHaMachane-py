@@ -99,17 +99,14 @@ class Text(discord.ext.commands.Cog):
     @discord.app_commands.command(name="get_translation", description="Get Sefaria's translation list for a work")
     @discord.app_commands.guild_only
     async def get_translation_list(self, interaction: discord.Interaction, book: str):
-        book = " ".join(book)
         url = f"{self.api_url}{book}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                body = await response.text()
-        sefaria_obj = json.loads(body)
+        sefaria_obj = await self.sefaria_request(url)
         if 'error' in sefaria_obj:
             await create_embed(interaction, "Sefaria's API has returned an error! Check your parameters!")
-            return
+            
         translations = ''
         counter = 1
+        
         for x in sefaria_obj["versions"]:
             if not x["language"] == 'he':
                 translations += f'\n {counter} - {x["versionTitle"]}'
@@ -122,13 +119,10 @@ class Text(discord.ext.commands.Cog):
     @discord.app_commands.guild_only
     async def set_translation(self, interaction, book: str, translation_number: int):
         url = f"{self.api_url}{book.rstrip()}"
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as response:
-                body = await response.text()
-        sefaria_obj = json.loads(body)
+        sefaria_obj = await self.sefaria_request(url)
+
         if 'error' in sefaria_obj:
             await create_embed(interaction, "Sefaria's API has returned an error! Check your parameters!")
-            return
         translation_list = []
         for x in sefaria_obj['versions']:
             if not x['language'] == 'he':
@@ -137,13 +131,14 @@ class Text(discord.ext.commands.Cog):
             translation = translation_list[translation_number - 1]
         except IndexError:
             await create_embed(interaction, "Invalid translation!")
-            return
+        
         db = await aiosqlite.connect("haGaon.db")
         cursor = await db.cursor()
         sql = "SELECT * FROM translation WHERE user_id = ?"
         val = (interaction.user.id,)
         await cursor.execute(sql, val)
         result = await cursor.fetchone()
+
         if result is None:
             sql = "INSERT INTO translation(user_id, work, translation) VALUES(?, ?, ?)"
             val = (interaction.user.id, book.rstrip(), translation)
@@ -152,6 +147,7 @@ class Text(discord.ext.commands.Cog):
             sql = "UPDATE translation SET work = ?, translation = ? WHERE user_id = ?"
             val = (book.rstrip(), translation, interaction.user.id)
             await create_embed(interaction, f"Translation for {book.rstrip()} updated to {translation} successfully!")
+        
         await cursor.execute(sql, val)
         await db.commit()
         await cursor.close()
